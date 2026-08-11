@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing & Invoice</title>
+
+<link rel="stylesheet" href="css/main.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#eef4ff;
+display:flex;
+}
+
+.main-content{
+flex:1;
+padding:35px;
+}
+
+.page-title{
+font-size:32px;
+font-weight:700;
+color:#1e3a8a;
+margin-bottom:25px;
+}
+
+.card{
+background:#fff;
+padding:30px;
+border-radius:20px;
+box-shadow:0 12px 25px rgba(0,0,0,.08);
+margin-bottom:30px;
+}
+
+.card h2{
+margin-bottom:20px;
+color:#1e293b;
+}
+
+#billForm{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+align-items:end;
+}
+
+.form-group{
+display:flex;
+flex-direction:column;
+}
+
+label{
+font-size:14px;
+font-weight:600;
+margin-bottom:8px;
+color:#475569;
+}
+
+input,
+select{
+padding:12px;
+border:2px solid #dbeafe;
+border-radius:10px;
+font-size:15px;
+}
+
+input:focus,
+select:focus{
+outline:none;
+border-color:#2563eb;
+}
+
+.btn{
+padding:12px;
+border:none;
+border-radius:10px;
+background:#2563eb;
+color:#fff;
+font-size:15px;
+cursor:pointer;
+transition:.3s;
+font-weight:600;
+}
+
+.btn:hover{
+background:#1d4ed8;
+}
+
+.invoice{
+display:none;
+background:white;
+border-radius:20px;
+padding:30px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+border-top:8px solid #2563eb;
+}
+
+.invoice-header{
+display:flex;
+justify-content:space-between;
+margin-bottom:25px;
+padding-bottom:15px;
+border-bottom:2px dashed #cbd5e1;
+}
+
+.invoice-header h2{
+color:#2563eb;
+}
+
+.invoice-info{
+line-height:2;
+margin-bottom:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+thead{
+background:#2563eb;
+color:white;
+}
+
+th,td{
+padding:15px;
+text-align:left;
+}
+
+tbody tr:nth-child(even){
+background:#f8fafc;
+}
+
+.total{
+margin-top:20px;
+padding-top:15px;
+border-top:2px solid #2563eb;
+text-align:right;
+font-size:22px;
+font-weight:bold;
+color:#16a34a;
+}
+
+.print-btn{
+margin-top:20px;
+width:100%;
+background:#16a34a;
+}
+
+.print-btn:hover{
+background:#15803d;
+}
+
+@media print{
+
+body *{
+visibility:hidden;
+}
+
+.invoice,
+.invoice *{
+visibility:visible;
+}
+
+.invoice{
+position:absolute;
+left:0;
+top:0;
+width:100%;
+box-shadow:none;
+}
+
+.print-btn{
+display:none;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar" id="sidebar-container"></div>
+
+<div class="main-content">
+
+<h1 class="page-title">💳 Billing Counter</h1>
+
+<div class="card">
+
+<h2>Create Invoice</h2>
+
+<form id="billForm">
+
+<div class="form-group">
+<label>Order ID</label>
+<input type="number" id="oid" required>
+</div>
+
+<div class="form-group">
+<label>Subtotal (₹)</label>
+<input type="number" id="tot" step="0.01" required>
+</div>
+
+<div class="form-group">
+<label>Payment Method</label>
+<select id="method">
+<option>Cash</option>
+<option>UPI</option>
+<option>Card</option>
+</select>
+</div>
+
+<button class="btn">Generate Bill</button>
+
+</form>
+
+</div>
+
+<div class="invoice" id="invoiceContainer">
+
+<div class="invoice-header">
+
+<div>
+<h2>☕ MONIKA G CAFE</h2>
+<p>Customer Payment Receipt</p>
+</div>
+
+<div>
+<p id="invDate"></p>
+</div>
+
+</div>
+
+<div class="invoice-info">
+
+<p><b>Order ID :</b> <span id="invOrderId"></span></p>
+
+<p><b>Payment :</b> <span id="invMethod"></span></p>
+
+<p><b>Status :</b> <span style="color:green;">PAID</span></p>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Description</th>
+<th>Amount</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>Subtotal</td>
+<td id="invSubtotal"></td>
+</tr>
+
+<tr>
+<td>CGST (2.5%)</td>
+<td id="invCgst"></td>
+</tr>
+
+<tr>
+<td>SGST (2.5%)</td>
+<td id="invSgst"></td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="total">
+
+Grand Total : <span id="invGrandTotal"></span>
+
+</div>
+
+<button class="btn print-btn" onclick="window.print()">
+
+🖨 Print Invoice
+
+</button>
+
+</div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/sidebar.js"></script>
+
+<script>
+
+document.getElementById("billForm").addEventListener("submit",async(e)=>{
+
+e.preventDefault();
+
+const subtotal=parseFloat(document.getElementById("tot").value);
+
+const orderId=parseInt(document.getElementById("oid").value);
+
+const method=document.getElementById("method").value;
+
+const cgst=subtotal*0.025;
+
+const sgst=subtotal*0.025;
+
+const tax=cgst+sgst;
+
+const total=subtotal+tax;
+
+const payload={
+
+order_id:orderId,
+subtotal:subtotal,
+tax_amount:tax,
+discount_applied:0,
+total_amount:total,
+payment_method:method
+
+};
+
+const res=await apiRequest("/billing/","POST",payload);
+
+if(res && !res.error){
+
+document.getElementById("invOrderId").innerText=orderId;
+
+document.getElementById("invMethod").innerText=method;
+
+document.getElementById("invSubtotal").innerText="₹"+subtotal.toFixed(2);
+
+document.getElementById("invCgst").innerText="₹"+cgst.toFixed(2);
+
+document.getElementById("invSgst").innerText="₹"+sgst.toFixed(2);
+
+document.getElementById("invGrandTotal").innerText="₹"+total.toFixed(2);
+
+document.getElementById("invDate").innerText=new Date().toLocaleString();
+
+document.getElementById("invoiceContainer").style.display="block";
+
+document.getElementById("billForm").reset();
+
+}else{
+
+alert("Billing Failed");
+
+}
+
+});
+
+</script>
+
+</body>
+</html>

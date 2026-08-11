@@ -1,0 +1,433 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    /* ── 🌲 LUXURY EMERALD & GOLD CANVAS ─────────────────────── */
+    --bg-primary: #041a14;          /* Deep Forest Emerald Obsidian base */
+    --bg-secondary: #062b21;        /* Dark Emerald panel background */
+    --bg-glass: rgba(6, 43, 33, 0.85);  /* Translucent glass card background */
+    
+    /* ── 🌲 EMERALD MINT & IMPERIAL GOLD ACCENTS ──────────────── */
+    --accent: #10b981;              /* Glowing Emerald Mint */
+    --accent-hover: #059669;        /* Rich Deep Emerald */
+    --accent-gold: #f59e0b;         /* Imperial Gold Accent */
+    --accent-cyan: #14b8a6;         /* Bright Teal Accent */
+    --accent-glow: rgba(16, 185, 129, 0.3);
+    --primary-gradient: linear-gradient(135deg, #059669 0%, #10b981 50%, #f59e0b 100%);
+    --primary-gradient-hover: linear-gradient(135deg, #047857 0%, #059669 50%, #d97706 100%);
+    
+    /* ── 🌲 HIGH-CONTRAST READABLE TYPOGRAPHY ───────────────────── */
+    --text-primary: #f0fdf4;        /* Crisp pale mint white text */
+    --text-secondary: #a7f3d0;      /* Soft emerald sage text */
+    --text-muted: #6ee7b7;          /* Muted mint text */
+    
+    /* ── 🌲 GLASS CARDS & BORDER ACCENTS ───────────────────────── */
+    --card-bg: rgba(6, 43, 33, 0.85);
+    --card-border: rgba(16, 185, 129, 0.25);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --input-bg: rgba(4, 26, 20, 0.95);
+    
+    /* ── 🌲 STATUS MESSAGES ────────────────────────────────────── */
+    --success: #10b981;
+    --success-bg: rgba(16, 185, 129, 0.18);
+    --error: #ef4444;
+    --error-bg: rgba(239, 68, 68, 0.18);
+    --warning: #f59e0b;
+    
+    /* ── 📋 FONTS, SHADOWS, & RADII ────────────────────────────── */
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 12px 35px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 25px rgba(16, 185, 129, 0.35);
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-primary);
+    background-image: 
+        radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 40%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+}
+
+/* ── 1. SIDEBAR NAVIGATION ──────────────────────────────────────── */
+.sidebar {
+    width: 280px;
+    background-color: var(--bg-secondary);
+    background-image: linear-gradient(180deg, rgba(6, 43, 33, 0.98) 0%, rgba(4, 26, 20, 0.99) 100%);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.25rem;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(12px);
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 2.25rem;
+    padding: 0.65rem 0.85rem;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.22);
+    border-radius: var(--radius-md);
+}
+
+.brand-logo {
+    font-size: 1.8rem;
+}
+
+.brand-text {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sidebar-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar-menu::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+}
+
+.sidebar-menu a:hover {
+    color: #ffffff;
+    background-color: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.25);
+    transform: translateX(4px);
+}
+
+.sidebar-menu a.active {
+    color: #ffffff;
+    background: var(--primary-gradient);
+    font-weight: 600;
+    box-shadow: var(--shadow-glow);
+}
+
+.sidebar-footer {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ── 2. MAIN CONTENT AREA ───────────────────────────────────────── */
+.main-content {
+    margin-left: 270px;
+    padding: 2.5rem 3rem;
+    flex-grow: 1;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+h1 {
+    font-size: 2.25rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(120deg, #ffffff 30%, var(--accent-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ── 3. CARDS & GLASS PANELS ────────────────────────────────────── */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    border-color: rgba(16, 185, 129, 0.45);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(16, 185, 129, 0.2);
+}
+
+.card h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 0.85rem;
+    color: #ffffff;
+}
+
+/* ── 4. FORMS & INPUT CONTROLS ──────────────────────────────────── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+input[type="datetime-local"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.85rem 1.15rem;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+    background-color: rgba(4, 26, 20, 0.98);
+}
+
+/* ── 5. BUTTONS & ACTIONS ───────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-primary, .btn-accent, .btn[type="submit"] {
+    background: var(--primary-gradient);
+    color: #ffffff;
+    box-shadow: var(--shadow-glow);
+}
+
+.btn-primary:hover, .btn-accent:hover, .btn[type="submit"]:hover {
+    background: var(--primary-gradient-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+}
+
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--error);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.btn-logout:hover,
+.btn-danger:hover {
+    background-color: var(--error);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* Auth Pages (Login / Register) */
+.auth-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 2.5rem;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-logo {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.auth-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.auth-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+}
+
+th {
+    background-color: #f1f5f9;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    padding: 1rem 1.25rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+}
+
+tr:hover td {
+    background-color: rgba(109, 40, 217, 0.02);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Google Button Styling */
+.google-btn-container {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin: 1.5rem 0;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.separator:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .5em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 1.5rem;
+    }
+}

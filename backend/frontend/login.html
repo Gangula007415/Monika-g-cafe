@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monika G Cafe - Sign In</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta name="color-scheme" content="dark">
+    <style>
+        :root {
+            --bg: #0a0b0c;
+            --bg-soft: #131517;
+            --ticket: #f6f2e7;
+            --ticket-field: #ece5d3;
+            --ink: #191713;
+            --ink-soft: #6f6a5d;
+            --flame: #ff6a1a;
+            --flame-deep: #d94e00;
+            --stamp: #cf3327;
+            --wire: rgba(246, 242, 231, 0.08);
+            --wire-strong: rgba(246, 242, 231, 0.16);
+        }
+
+        :root {
+            color-scheme: dark;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(circle at 20% 0%, rgba(255, 106, 26, 0.10), transparent 42%),
+                repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.012) 0px, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 3px),
+                var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 24px;
+            color: var(--ticket);
+        }
+
+        .split-container {
+            display: flex;
+            width: 980px;
+            max-width: 100%;
+            border-radius: 4px;
+            overflow: visible;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.55);
+        }
+
+        /* ---------- LEFT: KITCHEN BOARD PANEL ---------- */
+        .cafe-banner-panel {
+            flex: 1;
+            color: var(--ticket);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 46px 42px;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-soft);
+            border-radius: 4px 0 0 4px;
+            border: 1px solid var(--wire);
+            border-right: none;
+        }
+
+        .queue-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.68rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--flame);
+            font-weight: 600;
+        }
+
+        .queue-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--flame);
+            box-shadow: 0 0 8px var(--flame);
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+        }
+
+        .cafe-banner-content {
+            position: relative;
+            z-index: 1;
+            margin-top: 30px;
+        }
+
+        .ticket-no {
+            font-size: 0.72rem;
+            color: var(--ink-soft, #8a8574);
+            color: #8a8574;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .cafe-banner-content h1 {
+            font-family: 'Anton', sans-serif;
+            font-weight: 400;
+            font-size: 3.6rem;
+            line-height: 0.92;
+            margin: 0 0 18px 0;
+            letter-spacing: 0.5px;
+            color: var(--ticket);
+            text-transform: uppercase;
+        }
+
+        .cafe-banner-content h1 span {
+            color: var(--flame);
+        }
+
+        .cafe-banner-content p {
+            color: #a9a494;
+            font-size: 0.86rem;
+            line-height: 1.7;
+            max-width: 320px;
+            margin: 0;
+        }
+
+        .board-list {
+            list-style: none;
+            padding: 0;
+            margin: 32px 0 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .board-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.76rem;
+            color: #cfc9b8;
+        }
+
+        .board-list li::before {
+            content: "→";
+            color: var(--flame);
+            font-weight: 700;
+        }
+
+        .stamp-badge {
+            position: absolute;
+            right: -18px;
+            bottom: -6px;
+            width: 168px;
+            height: 168px;
+            border: 3px solid var(--stamp);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transform: rotate(-14deg);
+            opacity: 0.9;
+            z-index: 1;
+        }
+
+        .stamp-badge::before {
+            content: "";
+            position: absolute;
+            inset: 8px;
+            border: 1px dashed var(--stamp);
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+
+        .stamp-badge span {
+            font-family: 'Anton', sans-serif;
+            font-size: 0.92rem;
+            color: var(--stamp);
+            letter-spacing: 1.5px;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
+
+        /* ---------- RIGHT: RECEIPT / TICKET CARD ---------- */
+        .form-auth-panel {
+            flex: 1;
+            background: transparent;
+            padding: 0;
+            color: var(--ink);
+            position: relative;
+        }
+
+        .auth-card-wrapper {
+
+            background: var(--ticket);
+            padding: 42px 40px 36px;
+            position: relative;
+            border-radius: 0 4px 4px 0;
+            clip-path: polygon(0 10px, 2% 0, 4% 10px, 6% 0, 8% 10px, 10% 0, 12% 10px, 14% 0, 16% 10px, 18% 0, 20% 10px, 22% 0, 24% 10px, 26% 0, 28% 10px, 30% 0, 32% 10px, 34% 0, 36% 10px, 38% 0, 40% 10px, 42% 0, 44% 10px, 46% 0, 48% 10px, 50% 0, 52% 10px, 54% 0, 56% 10px, 58% 0, 60% 10px, 62% 0, 64% 10px, 66% 0, 68% 10px, 70% 0, 72% 10px, 74% 0, 76% 10px, 78% 0, 80% 10px, 82% 0, 84% 10px, 86% 0, 88% 10px, 90% 0, 92% 10px, 94% 0, 96% 10px, 98% 0, 100% 10px,
+                    100% 100%, 0 100%);
+        }
+
+        .auth-header {
+            margin-bottom: 22px;
+            padding-top: 6px;
+        }
+
+        .auth-header .kicker {
+            font-size: 0.66rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--flame-deep);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .auth-header h2 {
+            font-family: 'Anton', sans-serif;
+            font-weight: 400;
+            font-size: 2rem;
+            margin: 0;
+            color: var(--ink);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-header p {
+            color: var(--ink-soft);
+            font-size: 0.78rem;
+            margin-top: 4px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 22px;
+            border-bottom: 1px dashed rgba(25, 23, 19, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .auth-tab {
+            padding-bottom: 9px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .auth-tab.active {
+            color: var(--ink);
+            border-bottom: 2px solid var(--flame);
+        }
+
+        .identifier-toggle {
+            display: flex;
+            gap: 16px;
+            font-size: 0.74rem;
+            color: var(--ink-soft);
+            margin-bottom: 14px;
+        }
+
+        .identifier-toggle label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-bottom: 0.4rem;
+            letter-spacing: 1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px;
+            box-sizing: border-box;
+            background: var(--ticket-field) !important;
+            border: 1px solid rgba(25, 23, 19, 0.12) !important;
+            border-radius: 3px !important;
+            font-size: 0.88rem;
+            color: var(--ink) !important;
+            font-family: 'JetBrains Mono', monospace;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--flame) !important;
+            box-shadow: 0 0 0 3px rgba(255, 106, 26, 0.15);
+        }
+
+        .btn {
+            background: var(--ticket-field) !important;
+            border: 1px solid rgba(25, 23, 19, 0.15) !important;
+            border-radius: 3px !important;
+            color: var(--ink) !important;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        button[type="submit"].btn,
+        #otpSubmitBtn {
+            background: var(--ink) !important;
+            color: var(--flame) !important;
+            height: 46px;
+            border: none !important;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        button[type="submit"].btn:hover,
+        #otpSubmitBtn:hover {
+            background: var(--flame-deep) !important;
+            color: #100e0b !important;
+        }
+
+        .btn-secondary {
+            height: 44px;
+            color: var(--ink) !important;
+        }
+
+        .separator {
+            text-align: center;
+            color: var(--ink-soft);
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 38%;
+            height: 1px;
+            background: repeating-linear-gradient(90deg, rgba(25, 23, 19, 0.25) 0 4px, transparent 4px 8px);
+        }
+
+        .separator::before {
+            left: 0;
+        }
+
+        .separator::after {
+            right: 0;
+        }
+
+        .social-row {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            height: 44px;
+            border-radius: 3px;
+            border: 1px solid rgba(25, 23, 19, 0.15);
+            background: #ffffff;
+            color: var(--ink);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            cursor: pointer;
+            transition: border-color 0.15s ease, transform 0.1s ease;
+        }
+
+        .social-btn:hover {
+            border-color: var(--flame);
+            transform: translateY(-1px);
+        }
+
+        .social-btn.github {
+            background: var(--ink);
+            color: var(--ticket);
+            border-color: var(--ink);
+        }
+
+        .social-btn.github:hover {
+            background: #2a251d;
+        }
+
+        .social-btn.facebook {
+            background: #1877f2;
+            color: #ffffff;
+            border-color: #1877f2;
+        }
+
+        .social-btn.facebook:hover {
+            background: #1567d3;
+        }
+
+        .social-btn.microsoft {
+            background: #2f2f2f;
+            color: #ffffff;
+            border-color: #2f2f2f;
+        }
+
+        .social-btn.microsoft:hover {
+            background: #1f1f1f;
+        }
+
+        .google-btn-container {
+            margin-bottom: 9px;
+        }
+
+        .barcode {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 26px;
+            margin: 24px 0 8px;
+            justify-content: center;
+            opacity: 0.85;
+        }
+
+        .barcode span {
+            display: block;
+            background: var(--ink);
+            width: 2px;
+        }
+
+        p.mock-link {
+            text-align: center;
+            margin-top: 0.2rem;
+        }
+
+        p.mock-link a {
+            color: var(--ink-soft);
+            font-size: 0.7rem;
+            text-decoration: none;
+            border-bottom: 1px dashed var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        p.footer-link {
+            text-align: center;
+            margin-top: 1.2rem;
+            font-size: 0.8rem;
+            color: var(--ink-soft);
+        }
+
+        p.footer-link a {
+            color: var(--flame-deep);
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 0.3rem;
+        }
+
+        @media (max-width: 760px) {
+            .split-container {
+                flex-direction: column;
+            }
+
+            .cafe-banner-panel {
+                padding: 32px 28px;
+                border-radius: 4px 4px 0 0;
+                border-right: 1px solid var(--wire);
+                border-bottom: none;
+            }
+
+            .auth-card-wrapper {
+                border-radius: 0 0 4px 4px;
+                padding: 34px 26px 30px;
+            }
+
+            .stamp-badge {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="auth-body-layout">
+    <div class="split-container">
+        <div class="cafe-banner-panel">
+            <div class="queue-row"><span class="queue-dot"></span>Operations Hub — Live</div>
+
+            <div class="cafe-banner-content">
+                <div class="ticket-no">TICKET #0417 · STAFF ACCESS</div>
+                <h1>Monika G<br><span>Cafe</span></h1>
+                <p>Central workspace for the floor: run the menu, log the counter, cut invoices, and keep inventory
+                    honest — all in one place.</p>
+                <ul class="board-list">
+                    <li>Menu & pricing control</li>
+                    <li>Customer desk logs</li>
+                    <li>Invoicing</li>
+                    <li>Inventory reporting</li>
+                </ul>
+            </div>
+
+            <div class="stamp-badge"><span>Staff<br>Only<br>Access</span></div>
+        </div>
+
+        <div class="form-auth-panel">
+            <div class="auth-card-wrapper">
+                <div class="auth-header">
+                    <div class="kicker">Sign In</div>
+                    <h2>Operations Hub</h2>
+                    <p>Enter your credentials to open the register.</p>
+                </div>
+
+                <div class="auth-tabs">
+                    <div class="auth-tab active" id="tabPassword" onclick="switchTab('password')">Email</div>
+                    <div class="auth-tab" id="tabOTP" onclick="switchTab('otp')">OTP Login</div>
+                </div>
+
+                <form id="passwordForm">
+                    <div class="identifier-toggle">
+                        <label><input type="radio" name="pwdLoginType" value="email" checked
+                                onclick="togglePasswordInputFields('email')"> Email</label>
+                        <!-- <label><input type="radio" name="pwdLoginType" value="phone"
+                                onclick="togglePasswordInputFields('phone')"> Phone Number</label> -->
+                    </div>
+                    <div class="form-group" id="pwdEmailGroup">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="">
+                    </div>
+                    <div class="form-group" id="pwdPhoneGroup" style="display: none;">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 0.5rem;">Login</button>
+                </form>
+
+                <form id="otpForm" style="display: none;">
+                    <div class="identifier-toggle">
+                        <label><input type="radio" name="otpLoginType" value="email" checked
+                                onclick="toggleOtpInputFields('email')"> Email OTP</label>
+                        <label><input type="radio" name="otpLoginType" value="phone"
+                                onclick="toggleOtpInputFields('phone')"> Phone OTP</label>
+                    </div>
+                    <div class="form-group" id="otpEmailGroup">
+                        <label for="otpEmail">Email Address</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="email" id="otpEmail" placeholder="">
+                            <button type="button" id="sendEmailOtpBtn" class="btn btn-secondary"
+                                style="padding: 0 1rem; white-space: nowrap;">Send OTP</button>
+                        </div>
+                    </div>
+                    <div class="form-group" id="otpPhoneGroup" style="display: none;">
+                        <label for="otpPhone">Phone Number</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="tel" id="otpPhone" placeholder="">
+                            <button type="button" id="sendPhoneOtpBtn" class="btn btn-secondary"
+                                style="padding: 0 1rem; white-space: nowrap;">Send OTP</button>
+                        </div>
+                    </div>
+                    <div class="form-group" id="otpCodeGroup" style="display: none; margin-top: 1rem;">
+                        <label for="otpCode" id="otpCodeLabel">Verification Code</label>
+                        <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                    </div>
+                    <button type="submit" id="otpSubmitBtn" class="btn"
+                        style="width: 100%; margin-top: 1.5rem; display: none;">Verify & Login</button>
+                </form>
+
+                <div class="separator">or continue with</div>
+
+                <div class="social-row">
+                    <div class="google-btn-container">
+                        <div id="g_id_onload"
+                            data-client_id="547090057446-2qi2cfbv1t4ubkc458n45plel4npi54s.apps.googleusercontent.com"
+                            data-callback="handleCredentialResponse" data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"
+                            data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"
+                            style="width: 100%;">
+                        </div>
+                    </div>
+                    <button type="button" onclick="loginWithMicrosoft(event)" class="social-btn microsoft">
+                        <i class="fa-brands fa-microsoft"></i> Continue with Microsoft
+                    </button>
+                    <button type="button" onclick="loginWithFacebook()" class="social-btn facebook">
+                        <i class="fa-brands fa-facebook-f"></i> Continue with Facebook
+                    </button>
+                    <button type="button" onclick="loginWithGithub()" class="social-btn github">
+                        <i class="fa-brands fa-github"></i> Continue with GitHub
+                    </button>
+                </div>
+
+                <div class="barcode" aria-hidden="true">
+                    <span style="height:60%"></span><span style="height:100%"></span><span
+                        style="height:40%"></span><span style="height:80%"></span><span style="height:100%"></span><span
+                        style="height:50%"></span><span style="height:70%"></span><span style="height:30%"></span><span
+                        style="height:100%"></span><span style="height:60%"></span><span style="height:90%"></span><span
+                        style="height:40%"></span><span style="height:70%"></span><span style="height:100%"></span><span
+                        style="height:50%"></span><span style="height:80%"></span><span style="height:30%"></span><span
+                        style="height:60%"></span><span style="height:100%"></span><span style="height:45%"></span><span
+                        style="height:75%"></span><span style="height:55%"></span><span style="height:90%"></span><span
+                        style="height:35%"></span><span style="height:65%"></span>
+                </div>
+                <p class="mock-link">
+                    <a href="#" onclick="triggerMockGoogleLogin()">Test with Mock Google Login</a> &bull;
+                    <a href="#" onclick="triggerMockMicrosoftLogin()">Test with Mock Microsoft Login</a>
+                </p>
+                <p class="footer-link"><span>New to the system?</span><a href="register.html">Create Account</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        function switchTab(mode) {
+            const tabPassword = document.getElementById("tabPassword");
+            const tabOTP = document.getElementById("tabOTP");
+            const passwordForm = document.getElementById("passwordForm");
+            const otpForm = document.getElementById("otpForm");
+            if (mode === 'password') {
+                tabPassword.classList.add("active"); tabOTP.classList.remove("active");
+                passwordForm.style.display = "block"; otpForm.style.display = "none";
+            } else {
+                tabPassword.classList.remove("active"); tabOTP.classList.add("active");
+                passwordForm.style.display = "none"; otpForm.style.display = "block";
+            }
+        }
+
+        function togglePasswordInputFields(type) {
+            const emailGroup = document.getElementById("pwdEmailGroup");
+            const phoneGroup = document.getElementById("pwdPhoneGroup");
+            if (type === 'email') {
+                emailGroup.style.display = "block"; phoneGroup.style.display = "none";
+                document.getElementById("phone").value = "";
+            } else {
+                emailGroup.style.display = "none"; phoneGroup.style.display = "block";
+                document.getElementById("email").value = "";
+            }
+        }
+
+        function toggleOtpInputFields(type) {
+            const emailGroup = document.getElementById("otpEmailGroup");
+            const phoneGroup = document.getElementById("otpPhoneGroup");
+            document.getElementById("otpCodeGroup").style.display = "none";
+            document.getElementById("otpSubmitBtn").style.display = "none";
+            document.getElementById("otpCode").value = "";
+            if (type === 'email') {
+                emailGroup.style.display = "block"; phoneGroup.style.display = "none";
+                document.getElementById("otpPhone").value = "";
+            } else {
+                emailGroup.style.display = "none"; phoneGroup.style.display = "block";
+                document.getElementById("otpEmail").value = "";
+            }
+        }
+
+        document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const loginType = document.querySelector('input[name="pwdLoginType"]:checked').value;
+            const password = document.getElementById("password").value;
+            let usernameValue = loginType === 'email' ? document.getElementById("email").value.trim() : document.getElementById("phone").value.trim();
+
+            if (!usernameValue || !password) {
+                alert("❌ Please fulfill credential fields completely.");
+                return;
+            }
+
+            const formPayload = new URLSearchParams();
+            formPayload.append("username", usernameValue);
+            formPayload.append("password", password);
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: formPayload
+                });
+                const res = await response.json();
+                if (response.ok && res.access_token) {
+                    localStorage.setItem("access_token", res.access_token);
+                    window.location.href = "dashboard.html";
+                } else {
+                    alert(`❌ Login Failed: ${res.detail || 'Invalid Credentials'}`);
+                }
+            } catch (err) {
+                alert("❌ Cannot reach backend service.");
+            }
+        });
+
+        document.getElementById("sendEmailOtpBtn").addEventListener("click", async () => {
+            const email = document.getElementById("otpEmail").value.trim();
+            if (!email) { alert("Please input your email field first."); return; }
+            const btn = document.getElementById("sendEmailOtpBtn");
+            btn.disabled = true; btn.innerText = "Sending...";
+            const res = await apiRequest("/auth/send-otp", "POST", { email });
+            btn.disabled = false; btn.innerText = "Resend OTP";
+            if (res && !res.error) {
+                alert("OTP has been sent to your email! (check the backend terminal — no real email provider is wired up yet)");
+                document.getElementById("otpCodeLabel").innerText = "Email Verification Code";
+                document.getElementById("otpCodeGroup").style.display = "block";
+                document.getElementById("otpSubmitBtn").style.display = "block";
+            } else {
+                alert(res?.detail || "Failed to deliver code.");
+            }
+        });
+
+        document.getElementById("sendPhoneOtpBtn").addEventListener("click", async () => {
+            const phone = document.getElementById("otpPhone").value.trim();
+            if (!phone) { alert("Please input your phone profile first."); return; }
+            const btn = document.getElementById("sendPhoneOtpBtn");
+            btn.disabled = true; btn.innerText = "Sending...";
+            const res = await apiRequest("/auth/send-otp-phone", "POST", { phone: phone });
+            btn.disabled = false; btn.innerText = "Resend OTP";
+            if (res && !res.error) {
+                alert("OTP has been dispatched! (check the backend terminal — no real SMS provider is wired up yet)");
+                document.getElementById("otpCodeLabel").innerText = "Phone Verification Code";
+                document.getElementById("otpCodeGroup").style.display = "block";
+                document.getElementById("otpSubmitBtn").style.display = "block";
+            } else {
+                alert(res?.detail || "Failed to send phone OTP.");
+            }
+        });
+
+        document.getElementById("otpForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const type = document.querySelector('input[name="otpLoginType"]:checked').value;
+            const code = document.getElementById("otpCode").value.trim();
+            let endpoint = "/auth/verify-otp";
+            let payload = { otp_code: code };
+            if (type === 'email') {
+                payload.email = document.getElementById("otpEmail").value.trim();
+            } else {
+                endpoint = "/auth/verify-otp-phone";
+                payload.phone = document.getElementById("otpPhone").value.trim();
+            }
+            const res = await apiRequest(endpoint, "POST", payload);
+            if (res && res.access_token) {
+                localStorage.setItem("access_token", res.access_token);
+                window.location.href = "dashboard.html";
+            } else {
+                alert(res?.detail || "Verification failed. Code string incorrect.");
+            }
+        });
+
+        async function handleCredentialResponse(response) {
+            const res = await apiRequest("/auth/google-login", "POST", { token: response.credential });
+            if (res && res.access_token) {
+                localStorage.setItem("access_token", res.access_token);
+                window.location.href = "dashboard.html";
+            } else {
+                alert(res?.detail || "Google authentication handshake failed.");
+            }
+        }
+
+        async function triggerMockGoogleLogin() {
+            const prefix = prompt("Enter simulated Google email prefix:");
+            if (!prefix) return;
+            const res = await apiRequest("/auth/google-login", "POST", { token: "mock_google_token_" + prefix });
+            if (res && res.access_token) {
+                localStorage.setItem("access_token", res.access_token);
+                window.location.href = "dashboard.html";
+            } else {
+                alert(res?.detail || "Mock login failed.");
+            }
+        }
+
+        function loginWithFacebook() {
+            const fbAppId = " 1519625289404805"; // ← replace with your real Facebook App ID
+            if (!fbAppId) {
+                alert("Facebook App ID is not set — add it in loginWithFacebook().");
+                return;
+            }
+            const redirectUri = encodeURIComponent("http://localhost:8000/login.html");
+            window.location.href = `https://www.facebook.com/v12.0/dialog/oauth?client_id=${fbAppId}&redirect_uri=${redirectUri}&response_type=token&scope=email%20public_profile`;
+        }
+
+        async function handleFacebookCallback(accessToken) {
+            const res = await apiRequest("/auth/facebook-login/", "POST", { token: accessToken });
+            if (res && res.access_token) {
+                localStorage.setItem("access_token", res.access_token);
+                window.location.href = "dashboard.html";
+            } else {
+                alert(`❌ Facebook Auth Failed: ${res?.detail || 'Handshake rejected by backend.'}`);
+            }
+        }
+
+        function loginWithGithub() {
+            const githubClientId = "Ov23liaKrHzoTaondlfJ";
+            const redirectUri = encodeURIComponent("http://localhost:8000/login.html");
+            window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=user:email`;
+        }
+
+        async function handleGithubCallback(code) {
+            const res = await apiRequest("/auth/github-login", "POST", { code: code });
+            if (res && res.access_token) {
+                localStorage.setItem("access_token", res.access_token);
+                window.location.href = "dashboard.html";
+            } else {
+                alert(`❌ GitHub Handshake Failed: ${res?.detail || 'Authorization code invalid.'}`);
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        async function loginWithMicrosoft(e) {
+            if (e?.shiftKey) {
+                const msClientId = "79fe7e75-7cc0-4d54-a12f-d21feb5141c2";
+                const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
+                const tenant = "common";
+                const scope = encodeURIComponent("openid profile email User.Read");
+                window.location.href = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize?client_id=${msClientId}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=${scope}&state=microsoft`;
+                return;
+            }
+
+            let prefix = prompt("Enter your Microsoft email prefix (or press OK for default):", "microsoft_user");
+            if (prefix === null) return;
+            if (!prefix.trim()) prefix = "microsoft_user";
+            prefix = prefix.trim().split("@")[0];
+
+            const res = await apiRequest("/auth/microsoft-login", "POST", { token: "mock_microsoft_token_" + prefix });
+            if (res && res.access_token) {
+                localStorage.setItem("access_token", res.access_token);
+                window.location.href = "dashboard.html";
+            } else {
+                alert(res?.detail || "Microsoft login failed.");
+            }
+        }
+
+        async function triggerMockMicrosoftLogin() {
+            await loginWithMicrosoft();
+        }
+
+        async function handleMicrosoftCallback(code) {
+            const redirectUri = window.location.origin + window.location.pathname;
+            const res = await apiRequest("/auth/microsoft-login", "POST", { code: code, redirect_uri: redirectUri });
+            if (res && res.access_token) {
+                localStorage.setItem("access_token", res.access_token);
+                window.location.href = "dashboard.html";
+            } else {
+                alert(`❌ Microsoft Handshake Failed: ${res?.detail || 'Authorization code invalid.'}`);
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        // If we just got redirected back from OAuth providers with ?code=..., finish the handshake.
+        (function handleOAuthRedirects() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get("code");
+            const state = params.get("state");
+            if (code) {
+                if (state === "microsoft") {
+                    handleMicrosoftCallback(code);
+                } else {
+                    handleGithubCallback(code);
+                }
+            }
+
+            const hash = new URLSearchParams(window.location.hash.replace("#", "?"));
+            const fbToken = hash.get("access_token");
+            if (fbToken) handleFacebookCallback(fbToken);
+        })();
+        async function handleCredentialResponse(response) {
+            console.log("Token received from Google:", response.credential); // Debugging line
+
+            const res = await apiRequest("/auth/google-login", "POST", { token: response.credential });
+
+            if (res && res.access_token) {
+                localStorage.setItem("access_token", res.access_token);
+                window.location.href = "dashboard.html";
+            } else {
+                // Log the specific error from the backend for better troubleshooting
+                console.error("Backend Response:", res);
+                alert(res?.detail || "Google authentication handshake failed.");
+            }
+        }
+    </script>
+</body>
+
+</html>

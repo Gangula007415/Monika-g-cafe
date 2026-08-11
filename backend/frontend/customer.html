@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monika G Cafe - Customers</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+body{
+    display:flex;
+    background:#f8fafc;
+}
+.main-content{
+    flex:1;
+    padding:35px;
+}
+.header{
+    margin-bottom:30px;
+}
+.header h1{
+    font-size:32px;
+    color:#0f172a;
+}
+.header p{
+    color:#64748b;
+    margin-top:8px;
+}
+.customer-layout{
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:30px;
+    align-items:start;
+}
+.card{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+.card h3{
+    color:#2563eb;
+    margin-bottom:20px;
+}
+.form-group{
+    margin-bottom:18px;
+    display:flex;
+    flex-direction:column;
+}
+label{
+    font-size:14px;
+    font-weight:600;
+    color:#334155;
+    margin-bottom:7px;
+}
+input{
+    padding:12px;
+    border:2px solid #e2e8f0;
+    border-radius:10px;
+    font-size:15px;
+}
+input:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+.btn{
+    padding:12px;
+    width:100%;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+}
+.btn:hover{
+    background:#1d4ed8;
+}
+.points{
+    margin-top:20px;
+    text-align:center;
+    font-size:35px;
+    font-weight:800;
+    color:#16a34a;
+}
+.badge{
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+.live{
+    background:#dcfce7;
+    color:#15803d;
+}
+.offline{
+    background:#ffedd5;
+    color:#c2410c;
+}
+.table-box{
+    overflow-x:auto;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+thead{
+    background:#2563eb;
+    color:white;
+}
+th{
+    padding:15px;
+}
+td{
+    padding:15px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:center;
+}
+tbody tr:hover{
+    background:#eff6ff;
+}
+.view-btn{
+    background:#f59e0b;
+    color:white;
+    border:none;
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+}
+.view-btn:hover{
+    background:#d97706;
+}
+.error{
+    color:#dc2626;
+    font-weight:bold;
+}
+@media(max-width:950px){
+    .customer-layout{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar-container"></div>
+
+<main class="main-content">
+<div class="header">
+<h1>👥 Customer Loyalty Center</h1>
+<p>Manage customer profiles, loyalty points and order history.</p>
+</div>
+
+<div class="customer-layout">
+<!-- LEFT SIDE -->
+<div>
+<div class="card">
+<h3>🔍 Customer Lookup</h3>
+<div class="form-group">
+<label>Customer User ID</label>
+<input type="number" id="cid" value="1">
+</div>
+<button class="btn" onclick="checkCustomerMetrics()">Fetch Customer Data</button>
+<div class="points" id="pointsOut">-- Points</div>
+</div>
+
+<div class="card" style="margin-top:25px;">
+<h3>➕ Register Customer</h3>
+<form id="addCustomerForm">
+<div class="form-group">
+<label>First Name</label>
+<input type="text" id="newFn" required>
+</div>
+<div class="form-group">
+<label>Last Name</label>
+<input type="text" id="newLn" required>
+</div>
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="newEmail" required>
+</div>
+<div class="form-group">
+<label>Phone</label>
+<input type="text" id="newPhone">
+</div>
+<div class="form-group">
+<label>Password</label>
+<input type="password" id="newPassword" value="" required>
+</div>
+<button class="btn">Create Account</button>
+</form>
+</div>
+</div>
+
+<!-- RIGHT SIDE -->
+<div>
+<div class="card">
+<h3>Customer Directory <span id="dataSourceBadge" class="badge live">Live</span></h3>
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="customerDirectoryGrid">
+<tr>
+<td colspan="5">Loading Customers...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="card" style="margin-top:25px;">
+<h3>📜 Order History</h3>
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>Order ID</th>
+<th>Type</th>
+<th>Status</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody id="historyGrid">
+<tr>
+<td colspan="4">Select customer to view history</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/sidebar.js"></script>
+<!-- Complete corrected JavaScript code block for customer management -->
+<script>
+const CUSTOMER_API_ENDPOINT = "/customers";
+
+let localMockCustomers = JSON.parse(localStorage.getItem("offline_mock_customers")) || [
+{
+id: 1,
+first_name: "Priya",
+last_name: "Sharma",
+email: "priya@gmail.com",
+phone_profile: "+91 9876543210",
+loyalty_points: 120
+},
+{
+id: 2,
+first_name: "Rahul",
+last_name: "Kumar",
+email: "rahul@gmail.com",
+phone_profile: "+91 8765432109",
+loyalty_points: 45
+}
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+localStorage.setItem("offline_mock_customers", JSON.stringify(localMockCustomers));
+fetchAllCustomerLogs();
+});
+
+function extractArray(data) {
+if (Array.isArray(data)) return data;
+if (data?.customers) return data.customers;
+if (data?.data) return data.data;
+return null;
+}
+
+async function fetchAllCustomerLogs() {
+const badge = document.getElementById("dataSourceBadge");
+try {
+const res = await apiRequest(CUSTOMER_API_ENDPOINT);
+const arr = extractArray(res);
+if (arr) {
+badge.innerText = "LIVE";
+badge.className = "badge live";
+renderCustomerRows(arr);
+} else {
+throw Error();
+}
+} catch {
+badge.innerText = "OFFLINE";
+badge.className = "badge offline";
+renderCustomerRows(localMockCustomers);
+}
+}
+
+function renderCustomerRows(data) {
+const grid = document.getElementById("customerDirectoryGrid");
+grid.innerHTML = data.map(c => `
+<tr>
+<td>#${c.id || c.user_id}</td>
+<td>${c.first_name || ""} ${c.last_name || ""}</td>
+<td>${c.email}</td>
+<td>${c.phone_profile || "N/A"}</td>
+<td>
+<button class="view-btn" onclick="selectCustomerForLookup(${c.id || c.user_id})">View</button>
+</td>
+</tr>
+`).join("");
+}
+
+function selectCustomerForLookup(id) {
+document.getElementById("cid").value = id;
+checkCustomerMetrics();
+}
+
+async function checkCustomerMetrics() {
+const id = parseInt(document.getElementById("cid").value);
+const points = document.getElementById("pointsOut");
+const grid = document.getElementById("historyGrid");
+points.innerText = "Loading...";
+
+try {
+const loyalty = await apiRequest(`/customers/${id}/loyalty`);
+points.innerText = `${loyalty.loyalty_points} Points`;
+const history = await apiRequest(`/customers/${id}/history`);
+if (history.length) {
+grid.innerHTML = history.map(o => `
+<tr>
+<td>#${o.order_id}</td>
+<td>${o.order_type}</td>
+<td>${o.order_status}</td>
+<td>${o.created_at || "N/A"}</td>
+</tr>
+`).join("");
+} else {
+grid.innerHTML = `<tr><td colspan="4">No Orders Found</td></tr>`;
+}
+} catch {
+const user = localMockCustomers.find(c => c.id === id);
+if (user) {
+points.innerText = `${user.loyalty_points} Points`;
+} else {
+points.innerText = "-- Points";
+}
+grid.innerHTML = `<tr><td colspan="4">History Unavailable Offline</td></tr>`;
+}
+}
+
+document.getElementById("addCustomerForm").addEventListener("submit", async (e) => {
+e.preventDefault();
+
+const payload = {
+first_name: document.getElementById("newFn").value,
+last_name: document.getElementById("newLn").value,
+email: document.getElementById("newEmail").value,
+phone_profile: document.getElementById("newPhone").value,
+password: document.getElementById("newPassword").value,
+role_id: 4
+};
+
+try {
+const res = await apiRequest("/auth/register", "POST", payload);
+if (res && (res.user_id || res.id || res.success || res.user)) {
+alert("Customer Added Successfully");
+
+// Construct temporary object and update local state for immediate visibility
+const newCustomerObj = {
+id: res.user_id || res.id || (localMockCustomers.length + 1),
+first_name: payload.first_name,
+last_name: payload.last_name,
+email: payload.email,
+phone_profile: payload.phone_profile,
+loyalty_points: 0
+};
+
+localMockCustomers.push(newCustomerObj);
+localStorage.setItem("offline_mock_customers", JSON.stringify(localMockCustomers));
+
+fetchAllCustomerLogs();
+document.getElementById("addCustomerForm").reset();
+} else {
+alert("Server responded, but registration status unclear.");
+}
+} catch (error) {
+console.error("Registration failed:", error);
+alert("Failed to register customer. Check console/network logs for 400 Bad Request details.");
+}
+});
+</script>
+</body>
+</html>

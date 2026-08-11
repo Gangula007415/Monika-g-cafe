@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monika G Cafe - Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #f6efe1;
+            --paper-dark: #ece1c9;
+            --ink: #2b2018;
+            --ink-soft: #8a7c68;
+            --rust: #b5502f;
+            --rust-deep: #93401f;
+            --espresso: #241a14;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(181,80,47,0.12), transparent 50%),
+                var(--espresso);
+            padding: 40px 20px;
+        }
+
+        .receipt {
+            width: 400px;
+            max-width: 100%;
+            background: var(--paper);
+            color: var(--ink);
+            position: relative;
+            padding: 0 34px 30px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            clip-path: polygon(
+                0% 14px, 3% 0%, 6% 14px, 9% 0%, 12% 14px, 15% 0%, 18% 14px, 21% 0%,
+                24% 14px, 27% 0%, 30% 14px, 33% 0%, 36% 14px, 39% 0%, 42% 14px, 45% 0%,
+                48% 14px, 51% 0%, 54% 14px, 57% 0%, 60% 14px, 63% 0%, 66% 14px, 69% 0%,
+                72% 14px, 75% 0%, 78% 14px, 81% 0%, 84% 14px, 87% 0%, 90% 14px, 93% 0%,
+                96% 14px, 99% 0%, 100% 14px,
+                100% 100%,
+                97% calc(100% - 14px), 94% 100%, 91% calc(100% - 14px), 88% 100%, 85% calc(100% - 14px),
+                82% 100%, 79% calc(100% - 14px), 76% 100%, 73% calc(100% - 14px), 70% 100%,
+                67% calc(100% - 14px), 64% 100%, 61% calc(100% - 14px), 58% 100%, 55% calc(100% - 14px),
+                52% 100%, 49% calc(100% - 14px), 46% 100%, 43% calc(100% - 14px), 40% 100%,
+                37% calc(100% - 14px), 34% 100%, 31% calc(100% - 14px), 28% 100%, 25% calc(100% - 14px),
+                22% 100%, 19% calc(100% - 14px), 16% 100%, 13% calc(100% - 14px), 10% 100%,
+                7% calc(100% - 14px), 4% 100%, 1% calc(100% - 14px), 0% 100%
+            );
+        }
+
+        .receipt-header {
+            text-align: center;
+            padding: 34px 0 18px;
+        }
+
+        .receipt-mark {
+            font-size: 1.9rem;
+            margin-bottom: 6px;
+        }
+
+        .receipt-header h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.28rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0 0 4px 0;
+        }
+
+        .receipt-header .subline {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 1.5px;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+        }
+
+        .dashed-rule {
+            border: none;
+            border-top: 2px dashed rgba(43,32,24,0.25);
+            margin: 18px 0;
+        }
+
+        .doc-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-bottom: 18px;
+        }
+        .doc-title span.hot { color: var(--rust); font-weight: 700; }
+
+        .form-row { display: flex; gap: 12px; }
+        .form-row .form-group { flex: 1; }
+
+        .form-group { width: 100%; margin-bottom: 1rem; }
+
+        .form-group label {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.64rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            height: 42px;
+            padding: 0 4px;
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px dashed rgba(43,32,24,0.35);
+            font-size: 0.92rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+            transition: border-color 0.15s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            border-radius: 0;
+        }
+        .form-group select {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%238a7c68'><path d='M5.5 7l4.5 5 4.5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 2px center;
+            background-size: 16px;
+        }
+        .form-group input::placeholder { color: #b7a98f; }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-bottom: 1.5px solid var(--rust);
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        button[type="submit"].btn {
+            background: var(--rust);
+            color: var(--paper);
+            height: 48px;
+            width: 100%;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            transition: background 0.15s ease, transform 0.1s ease;
+        }
+        button[type="submit"].btn:hover { background: var(--rust-deep); }
+        button[type="submit"].btn:active { transform: translateY(1px); }
+
+        .register-row {
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+            color: var(--ink-soft);
+            margin: 20px 0 0 0;
+        }
+        .register-row a {
+            color: var(--rust);
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1.5px solid var(--rust);
+            margin-left: 4px;
+        }
+        .register-row a:hover { color: var(--rust-deep); border-color: var(--rust-deep); }
+
+        .barcode {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 30px;
+            margin: 22px 0 6px;
+            justify-content: center;
+        }
+        .barcode span {
+            display: block;
+            width: 2px;
+            background: var(--ink);
+        }
+
+        .receipt-footer {
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-top: 4px;
+        }
+
+        @media (max-width: 460px) {
+            .receipt { padding: 0 22px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <div class="receipt-header">
+            <div class="receipt-mark">☕</div>
+            <h1>Monika G Cafe</h1>
+            <div class="subline">Operations Hub</div>
+        </div>
+
+        <hr class="dashed-rule">
+
+        <div class="doc-title">
+            <span>New Member Slip</span>
+            <span class="hot">Register</span>
+        </div>
+
+        <form id="regForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fn">First Name</label>
+                    <input type="text" id="fn" placeholder="" required>
+                </div>
+                <div class="form-group">
+                    <label for="ln">Last Name</label>
+                    <input type="text" id="ln" placeholder="" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number (Optional)</label>
+                <input type="text" id="phone" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role_id">Role</label>
+                <select id="role_id">
+                    <option value="4" selected>Customer</option>
+                    <option value="3">Staff</option>
+                    <option value="5">Admin</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">Register</button>
+        </form>
+
+        <p class="register-row">
+            Already signed up? <a href="login.html">Login</a>
+        </p>
+
+        <div class="barcode" id="barcode"></div>
+        <div class="receipt-footer">Thank you &middot; Keep this ticket</div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        (function renderBarcode() {
+            const el = document.getElementById('barcode');
+            let html = '';
+            for (let i = 0; i < 46; i++) {
+                const w = Math.random() > 0.75 ? 3 : 1.5;
+                const h = 14 + Math.random() * 16;
+                html += `<span style="width:${w}px;height:${h}px;"></span>`;
+            }
+            el.innerHTML = html;
+        })();
+
+        document.getElementById("regForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const data = {
+                first_name: document.getElementById("fn").value,
+                last_name: document.getElementById("ln").value,
+                email: document.getElementById("email").value,
+                phone_profile: document.getElementById("phone").value.trim() || null,
+                password: document.getElementById("password").value,
+                role_id: parseInt(document.getElementById("role_id").value)
+            };
+            const res = await apiRequest("/auth/register", "POST", data);
+            if (res && res.user_id) {
+                alert("Success!");
+                window.location.href = "login.html";
+            } else {
+                alert("Failed: " + (res?.detail || "Error"));
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Monika G Cafe - Reservations</title>
+
+<link rel="stylesheet" href="css/main.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    display:flex;
+    background:#f8fafc;
+}
+
+.main-content{
+    flex:1;
+    padding:25px;
+}
+
+.main-content h1{
+    font-size:30px;
+    color:#0f172a;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    color:#64748b;
+    margin-bottom:20px;
+}
+
+
+.reservation-workspace{
+    display:grid;
+    grid-template-columns:320px 1fr;
+    gap:20px;
+    align-items:start;
+}
+
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+
+.card h3{
+    color:#2563eb;
+    margin-bottom:18px;
+}
+
+
+.form-group{
+    margin-bottom:14px;
+}
+
+
+label{
+    display:block;
+    font-size:14px;
+    font-weight:600;
+    color:#334155;
+    margin-bottom:6px;
+}
+
+
+input{
+    width:100%;
+    padding:11px;
+    border-radius:8px;
+    border:1px solid #cbd5e1;
+}
+
+
+input:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+
+.btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+
+.table-box{
+    width:100%;
+    overflow-x:auto;
+}
+
+
+table{
+    width:100%;
+    min-width:650px;
+    border-collapse:collapse;
+}
+
+
+thead{
+    background:#2563eb;
+    color:white;
+}
+
+
+th,td{
+    padding:13px;
+    text-align:center;
+    border-bottom:1px solid #e2e8f0;
+}
+
+
+tbody tr:hover{
+    background:#eff6ff;
+}
+
+
+.status{
+    background:#dcfce7;
+    color:#15803d;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+
+@media(max-width:900px){
+
+.reservation-workspace{
+    grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="sidebar" id="sidebar-container"></div>
+
+
+<main class="main-content">
+
+
+<h1>Table Reservation Manager</h1>
+
+<p class="subtitle">
+Manage customer bookings, table allocation and reservation schedules.
+</p>
+
+
+
+<div class="reservation-workspace">
+
+
+
+<!-- Reservation Form -->
+
+<div class="card">
+
+<h3>Create Reservation</h3>
+
+
+<form id="resForm">
+
+
+<div class="form-group">
+<label>Customer ID</label>
+<input type="number" id="cust" placeholder="" required>
+</div>
+
+
+
+<div class="form-group">
+<label>Table ID</label>
+<input type="number" id="tbl" placeholder="" required>
+</div>
+
+
+
+<div class="form-group">
+<label>Number Of Guests</label>
+<input type="number" id="guests" min="1" placeholder="" required>
+</div>
+
+
+
+<div class="form-group">
+<label>Reservation Date & Time</label>
+<input type="datetime-local" id="time" required>
+</div>
+
+
+
+<button type="submit" class="btn">
+Reserve Table
+</button>
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+<!-- Reservation Table -->
+
+
+<div class="card">
+
+
+<h3>Active Reservations</h3>
+
+
+<div class="table-box">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+<th>Reservation ID</th>
+<th>Customer</th>
+<th>Table</th>
+<th>Guests</th>
+<th>Date & Time</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+
+
+<tbody id="resGrid">
+
+<tr>
+<td colspan="6">
+Loading reservations...
+</td>
+</tr>
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</main>
+
+
+
+<script src="js/api.js"></script>
+<script src="js/sidebar.js"></script>
+
+
+<script>
+
+
+async function fetchReservations(){
+
+
+const data = await apiRequest("/reservations/");
+
+const grid=document.getElementById("resGrid");
+
+
+
+if(data && !data.error){
+
+
+
+if(data.length===0){
+
+
+grid.innerHTML=`
+
+<tr>
+<td colspan="6">
+No reservations available.
+</td>
+</tr>
+
+`;
+
+
+}
+
+else{
+
+
+grid.innerHTML=data.map(r=>`
+
+
+<tr>
+
+<td>#${r.reservation_id}</td>
+
+<td>Customer #${r.customer_id}</td>
+
+<td>Table #${r.table_id}</td>
+
+<td>${r.number_of_guests} Persons</td>
+
+<td>
+${new Date(r.reservation_time).toLocaleString()}
+</td>
+
+
+<td>
+<span class="status">
+${r.status}
+</span>
+</td>
+
+
+</tr>
+
+
+
+`).join("");
+
+}
+
+
+
+}
+
+else{
+
+
+grid.innerHTML=`
+
+<tr>
+<td colspan="6">
+Failed to load reservation data.
+</td>
+</tr>
+
+`;
+
+}
+
+
+}
+
+
+
+
+
+document.getElementById("resForm")
+.addEventListener("submit",async(e)=>{
+
+
+e.preventDefault();
+
+
+
+const date=document.getElementById("time").value;
+
+
+const payload={
+
+
+customer_id:
+parseInt(document.getElementById("cust").value),
+
+
+table_id:
+parseInt(document.getElementById("tbl").value),
+
+
+number_of_guests:
+parseInt(document.getElementById("guests").value),
+
+
+reservation_time:
+date.replace("T"," ")+":00"
+
+
+};
+
+
+
+const res=await apiRequest("/reservations/","POST",payload);
+
+
+
+if(res && !res.error){
+
+
+alert("Reservation created successfully!");
+
+document.getElementById("resForm").reset();
+
+fetchReservations();
+
+
+}
+
+else{
+
+
+alert(
+"Reservation Error : "+
+(typeof res?.detail==="object"
+?JSON.stringify(res.detail)
+:res?.detail)
+);
+
+
+}
+
+
+
+});
+
+
+
+fetchReservations();
+
+
+
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monika G Cafe - Employees</title>
+
+<link rel="stylesheet" href="css/main.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+display:flex;
+background:#f1f5f9;
+}
+
+.main-content{
+flex:1;
+padding:35px;
+}
+
+.page-header{
+margin-bottom:30px;
+}
+
+.page-header h1{
+font-size:32px;
+color:#0f172a;
+}
+
+.page-header p{
+margin-top:8px;
+color:#64748b;
+}
+
+
+/* Layout */
+
+.employee-layout{
+
+display:grid;
+grid-template-columns:360px 1fr;
+gap:30px;
+align-items:start;
+
+}
+
+
+/* Cards */
+
+.card{
+
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.card h3{
+
+color:#2563eb;
+margin-bottom:20px;
+
+}
+
+
+/* Form */
+
+.form-group{
+
+display:flex;
+flex-direction:column;
+margin-bottom:18px;
+
+}
+
+label{
+
+font-weight:600;
+font-size:14px;
+color:#334155;
+margin-bottom:7px;
+
+}
+
+input{
+
+padding:12px;
+border-radius:12px;
+border:2px solid #e2e8f0;
+font-size:15px;
+
+}
+
+
+input:focus{
+
+outline:none;
+border-color:#2563eb;
+
+}
+
+
+.helper{
+
+font-size:12px;
+color:#64748b;
+margin-top:5px;
+
+}
+
+
+.btn{
+
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:#2563eb;
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:.3s;
+
+}
+
+
+.btn:hover{
+
+background:#1d4ed8;
+
+}
+
+
+.btn-cancel{
+
+background:#dc2626;
+margin-top:10px;
+
+}
+
+.btn-cancel:hover{
+
+background:#b91c1c;
+
+}
+
+
+/* Table */
+
+.table-card{
+
+overflow:hidden;
+
+}
+
+
+.table-wrapper{
+
+overflow-x:auto;
+
+}
+
+
+table{
+
+width:100%;
+border-collapse:collapse;
+min-width:750px;
+
+}
+
+
+thead{
+
+background:#2563eb;
+color:white;
+
+}
+
+
+th{
+
+padding:15px;
+text-align:center;
+
+}
+
+
+td{
+
+padding:15px;
+text-align:center;
+border-bottom:1px solid #e5e7eb;
+
+}
+
+
+tbody tr:hover{
+
+background:#eff6ff;
+
+}
+
+
+.profile-name{
+
+font-weight:bold;
+color:#0f172a;
+
+}
+
+
+.profile-info{
+
+font-size:12px;
+color:#64748b;
+margin-top:5px;
+
+}
+
+
+/* Status */
+
+.status{
+
+background:#dcfce7;
+color:#15803d;
+padding:6px 14px;
+border-radius:20px;
+font-size:12px;
+font-weight:bold;
+
+}
+
+
+.edit-btn{
+
+padding:8px 15px;
+background:#f59e0b;
+border:none;
+color:white;
+border-radius:8px;
+cursor:pointer;
+
+}
+
+.edit-btn:hover{
+
+background:#d97706;
+
+}
+
+
+@media(max-width:900px){
+
+.employee-layout{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="sidebar" id="sidebar-container"></div>
+
+
+<main class="main-content">
+
+
+<div class="page-header">
+
+<h1>👨‍💼 Employee Management</h1>
+
+<p>Manage staff profiles, salary details and employment records.</p>
+
+</div>
+
+
+
+<div class="employee-layout">
+
+
+<div class="card">
+
+
+<h3 id="formTitle">Add New Employee</h3>
+
+
+<form id="empForm">
+
+
+<input type="hidden" id="editingEmpId">
+
+
+<div class="form-group">
+
+<label>User Account ID</label>
+
+<input type="number" id="uid" placeholder="Enter User ID" required>
+
+<span class="helper">Existing registered user account</span>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Salary (₹)</label>
+
+<input type="number" id="sal" step="0.01" required>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label>Joining Date</label>
+
+<input type="date" id="hdate" required>
+
+</div>
+
+
+
+<button class="btn" id="submitBtn">
+
+Save Employee
+
+</button>
+
+
+<button type="button" 
+id="cancelBtn"
+class="btn btn-cancel"
+style="display:none;"
+onclick="resetFormState()">
+
+Cancel Edit
+
+</button>
+
+
+
+</form>
+
+
+</div>
+
+
+
+
+<div class="card table-card">
+
+
+<h3>Employee Directory</h3>
+
+
+<div class="table-wrapper">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Employee Details</th>
+<th>Salary</th>
+<th>Joining Date</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+
+</thead>
+
+
+<tbody id="employeeGrid">
+
+<tr>
+
+<td colspan="6">Loading Employees...</td>
+
+</tr>
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</main>
+
+
+
+<script src="js/api.js"></script>
+<script src="js/sidebar.js"></script>
+
+
+<script>
+
+
+async function fetchEmployees(){
+
+
+const data=await apiRequest("/employees/");
+
+const grid=document.getElementById("employeeGrid");
+
+
+if(data && !data.error){
+
+
+if(data.length===0){
+
+
+grid.innerHTML=
+`
+<tr>
+<td colspan="6">
+No Employee Records Found
+</td>
+</tr>
+`;
+
+
+}
+
+else{
+
+
+grid.innerHTML=data.map(emp=>`
+
+
+<tr>
+
+
+<td>#${emp.employee_id}</td>
+
+
+<td>
+
+<div class="profile-name">${emp.name}</div>
+
+<div class="profile-info">
+
+User ID : ${emp.user_id}<br>
+
+${emp.email}
+
+</div>
+
+</td>
+
+
+<td>₹${parseFloat(emp.salary).toFixed(2)}</td>
+
+
+<td>${emp.hire_date}</td>
+
+
+<td>
+
+<span class="status">
+
+${emp.status}
+
+</span>
+
+</td>
+
+
+<td>
+
+<button class="edit-btn"
+
+onclick="triggerEditMode(
+${emp.employee_id},
+${emp.user_id},
+${emp.salary},
+'${emp.hire_date}'
+)">
+
+✏ Edit
+
+</button>
+
+
+</td>
+
+
+</tr>
+
+
+`).join("");
+
+}
+
+
+}
+
+
+}
+
+
+
+
+function triggerEditMode(id,user,salary,date){
+
+
+document.getElementById("editingEmpId").value=id;
+
+document.getElementById("uid").value=user;
+
+document.getElementById("uid").disabled=true;
+
+document.getElementById("sal").value=salary;
+
+document.getElementById("hdate").value=date;
+
+
+document.getElementById("formTitle").innerText="Update Employee";
+
+document.getElementById("submitBtn").innerText="Update Record";
+
+document.getElementById("cancelBtn").style.display="block";
+
+
+}
+
+
+
+function resetFormState(){
+
+
+document.getElementById("empForm").reset();
+
+document.getElementById("editingEmpId").value="";
+
+document.getElementById("uid").disabled=false;
+
+
+document.getElementById("formTitle").innerText="Add New Employee";
+
+document.getElementById("submitBtn").innerText="Save Employee";
+
+document.getElementById("cancelBtn").style.display="none";
+
+
+}
+
+
+
+document.getElementById("empForm").addEventListener("submit",async(e)=>{
+
+
+e.preventDefault();
+
+
+const id=document.getElementById("editingEmpId").value;
+
+
+const payload={
+
+
+user_id:parseInt(document.getElementById("uid").value),
+
+salary:parseFloat(document.getElementById("sal").value),
+
+hire_date:document.getElementById("hdate").value
+
+
+};
+
+
+
+let res;
+
+
+if(id){
+
+res=await apiRequest(`/employees/${id}`,"PUT",payload);
+
+}
+
+else{
+
+res=await apiRequest("/employees/","POST",payload);
+
+}
+
+
+
+if(res && !res.error){
+
+alert("Employee Saved Successfully");
+
+resetFormState();
+
+fetchEmployees();
+
+}
+
+else{
+
+alert("Operation Failed");
+
+}
+
+
+});
+
+
+
+fetchEmployees();
+
+
+</script>
+
+
+</body>
+</html>
