@@ -138,6 +138,13 @@ The project includes `railway.toml` configurations for quick 1-click deployment 
 
 ---
 
+## 👤 Author & Contributor
+
+- **Gangula007415** - [GitHub Profile](https://github.com/Gangula007415)
+
+---
+
 ## 📝 License
 
 This project is open source and available under the [MIT License](LICENSE).
+
