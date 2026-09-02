@@ -22,14 +22,24 @@ from backend.routers import (
 import os
 
 
-# Create database tables & auto migrate missing columns
-Base.metadata.create_all(bind=engine)
-auto_migrate_schema()
+from contextlib import asynccontextmanager
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Create database tables & auto migrate missing columns
+    try:
+        Base.metadata.create_all(bind=engine)
+        auto_migrate_schema()
+    except Exception as e:
+        print(f"⚠️ Database initialization warning (DB may be offline or initializing): {e}")
+    yield
 
 
 # Create FastAPI application
 app = FastAPI(
-    title="Monika G Cafe Management System API"
+    title="Monika G Cafe Management System API",
+    lifespan=lifespan
 )
 
 
