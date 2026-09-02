@@ -199,9 +199,14 @@ def verify_otp(request: schemas.OTPVerifyRequest, db: Session = Depends(get_db))
 # ── 7. PHONE OTP DISPATCH ──────────────────────────────────────────
 @router.post("/send-otp-phone")
 async def send_otp_phone(data: PhoneSchema, db: Session = Depends(get_db)):
-    clean_phone = data.phone.replace(" ", "")
-    if not clean_phone.startswith("+"):
-        clean_phone = f"+91{clean_phone}"
+    raw_phone = data.phone.strip().replace(" ", "").replace("-", "")
+    if not raw_phone.startswith("+"):
+        if len(raw_phone) == 10:
+            clean_phone = f"+91{raw_phone}"
+        else:
+            clean_phone = f"+{raw_phone}"
+    else:
+        clean_phone = raw_phone
 
     otp_code = f"{random.randint(100000, 999999)}"
     expires_at = datetime.now() + timedelta(minutes=5)
@@ -215,22 +220,44 @@ async def send_otp_phone(data: PhoneSchema, db: Session = Depends(get_db)):
     db.add(otp_entry)
     db.commit()
 
-    try:
-        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        client.messages.create(
-            body=f"Your secret code for Monika G Cafe is: {otp_code}. Welcome!",
-            from_=TWILIO_FROM_NUMBER,
-            to=clean_phone
-        )
-        print(f"🚀 Live SMS delivered to carriers for: {clean_phone}")
+    account_sid = settings.TWILIO_ACCOUNT_SID or os.getenv("TWILIO_ACCOUNT_SID", "")
+    auth_token = settings.TWILIO_AUTH_TOKEN or os.getenv("TWILIO_AUTH_TOKEN", "")
+    from_number = settings.TWILIO_FROM_NUMBER or os.getenv("TWILIO_FROM_NUMBER", "+12193552493")
 
-    except Exception as e:
-        print(f"⚠️ TWILIO ERROR ENCOUNTERED: {str(e)}")
-        print("\n" + "="*50)
-        print(f"👉 TESTING FALLBACK OTP CODE: {otp_code} 👈")
-        print("="*50 + "\n")
+    sms_sent = False
+    twilio_error = None
 
-    return {"status": "success", "detail": "OTP sent successfully"}
+    if account_sid and auth_token and from_number:
+        try:
+            client = Client(account_sid, auth_token)
+            client.messages.create(
+                body=f"Your secret code for Monika G Cafe is: {otp_code}. Welcome!",
+                from_=from_number,
+                to=clean_phone
+            )
+            sms_sent = True
+            print(f"🚀 Live SMS delivered to carriers for: {clean_phone}")
+        except Exception as e:
+            twilio_error = str(e)
+            print(f"⚠️ TWILIO ERROR ENCOUNTERED: {twilio_error}")
+            print("\n" + "="*50)
+            print(f"👉 TESTING FALLBACK OTP CODE: {otp_code} 👈")
+            print("="*50 + "\n")
+    else:
+        print(f"⚠️ Twilio credentials missing in settings! Fallback OTP CODE: {otp_code}")
+
+    res = {
+        "status": "success",
+        "detail": "OTP generated successfully",
+        "sms_delivered": sms_sent
+    }
+    if twilio_error:
+        res["twilio_error"] = twilio_error
+        res["fallback_otp"] = otp_code
+    elif not sms_sent:
+        res["fallback_otp"] = otp_code
+
+    return res
 
 # ── 8. PHONE OTP VERIFY ────────────────────────────────────────────
 @router.post("/verify-otp-phone", response_model=schemas.Token)

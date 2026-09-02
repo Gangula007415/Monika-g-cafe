@@ -9,3 +9,4 @@ python-multipart==0.0.9
 pydantic-settings==2.3.1
 email-validator
 twilio
+gunicorn==22.0.0
