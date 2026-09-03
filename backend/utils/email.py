@@ -34,7 +34,7 @@ def send_email(to_email: str, subject: str, html_content: str):
     smtp_port = email_settings.SMTP_PORT
 
     if not smtp_user or not smtp_pass:
-        print(f"[Warning] Email credentials missing (user='{smtp_user}'). Skipping direct SMTP email dispatch.")
+        print(f"[Warning] Email credentials missing (user='{smtp_user}'). Please add SMTP_USERNAME & SMTP_PASSWORD in Render Dashboard -> Environment Variables.")
         return False
 
     msg = MIMEMultipart("alternative")
