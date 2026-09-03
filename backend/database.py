@@ -5,7 +5,14 @@ from backend.config import settings
 
 def get_engine():
     db_url = os.getenv("DATABASE_URL", settings.DATABASE_URL)
+    is_cloud = os.getenv("RENDER") is not None or "onrender.com" in os.getenv("RENDER_EXTERNAL_URL", "")
     
+    # If running on Render cloud and no external DATABASE_URL was supplied (still points to localhost),
+    # use SQLite directly to ensure fast, clean startup without connection timeouts.
+    if is_cloud and "localhost" in db_url:
+        print("ℹ️ Running on Render cloud. Using SQLite database for zero-config persistence.")
+        return create_engine("sqlite:///./monika_cafe.db", connect_args={"check_same_thread": False})
+        
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)
         
@@ -14,12 +21,11 @@ def get_engine():
 
     try:
         eng = create_engine(db_url, pool_pre_ping=True)
-        # Quick connection test
         with eng.connect() as conn:
             pass
         return eng
     except Exception as e:
-        print(f"⚠️ Primary DB connection failed ({e}). Falling back to SQLite database.")
+        print(f"ℹ️ Primary DB unavailable ({e}). Using SQLite database.")
         sqlite_url = "sqlite:///./monika_cafe.db"
         return create_engine(sqlite_url, connect_args={"check_same_thread": False})
 
