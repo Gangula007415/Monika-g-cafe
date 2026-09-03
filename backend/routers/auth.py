@@ -204,17 +204,23 @@ def verify_otp(request: schemas.OTPVerifyRequest, db: Session = Depends(get_db))
     access_token = auth_utils.create_access_token(data={"sub": user.email, "role": user.role_id})
     return {"access_token": access_token, "token_type": "bearer"}
 
+def normalize_phone_number(phone_str: str) -> str:
+    if not phone_str:
+        return ""
+    raw = phone_str.strip().replace(" ", "").replace("-", "")
+    if not raw.startswith("+"):
+        if len(raw) == 10:
+            return f"+91{raw}"
+        elif len(raw) == 12 and raw.startswith("91"):
+            return f"+{raw}"
+        else:
+            return f"+{raw}"
+    return raw
+
 # ── 7. PHONE OTP DISPATCH ──────────────────────────────────────────
 @router.post("/send-otp-phone")
 async def send_otp_phone(data: PhoneSchema, db: Session = Depends(get_db)):
-    raw_phone = data.phone.strip().replace(" ", "").replace("-", "")
-    if not raw_phone.startswith("+"):
-        if len(raw_phone) == 10:
-            clean_phone = f"+91{raw_phone}"
-        else:
-            clean_phone = f"+{raw_phone}"
-    else:
-        clean_phone = raw_phone
+    clean_phone = normalize_phone_number(data.phone)
 
     otp_code = f"{random.randint(100000, 999999)}"
     expires_at = datetime.now() + timedelta(minutes=5)
@@ -270,12 +276,10 @@ async def send_otp_phone(data: PhoneSchema, db: Session = Depends(get_db)):
 # ── 8. PHONE OTP VERIFY ────────────────────────────────────────────
 @router.post("/verify-otp-phone", response_model=schemas.Token)
 def verify_otp_phone(request: PhoneVerifyRequest, db: Session = Depends(get_db)):
-    search_phone = request.phone.replace(" ", "")
-    if not search_phone.startswith("+"):
-        search_phone = f"+91{search_phone}"
+    clean_phone = normalize_phone_number(request.phone)
 
     otp_record = db.query(models.OTPVerification).filter(
-        models.OTPVerification.email == search_phone,
+        (models.OTPVerification.email == clean_phone) | (models.OTPVerification.email == request.phone.strip()),
         models.OTPVerification.is_verified == False,
         models.OTPVerification.expires_at > datetime.now()
     ).order_by(models.OTPVerification.id.desc()).first()
@@ -287,7 +291,7 @@ def verify_otp_phone(request: PhoneVerifyRequest, db: Session = Depends(get_db))
     db.commit()
 
     user = db.query(models.User).filter(
-        (models.User.phone_profile == search_phone) | (models.User.phone_profile == request.phone.replace(" ", ""))
+        (models.User.phone_profile == clean_phone) | (models.User.phone_profile == request.phone.strip())
     ).first()
 
     if not user:
@@ -295,7 +299,7 @@ def verify_otp_phone(request: PhoneVerifyRequest, db: Session = Depends(get_db))
             first_name="Phone",
             last_name="User",
             email=f"phone_{random.randint(1000,9999)}@monikagcafe.local",
-            phone_profile=search_phone,
+            phone_profile=clean_phone,
             password_hash=auth_utils.hash_password(""),
             role_id=4
         )
@@ -303,7 +307,7 @@ def verify_otp_phone(request: PhoneVerifyRequest, db: Session = Depends(get_db))
         db.commit()
         db.refresh(user)
 
-    access_token = auth_utils.create_access_token(data={"sub": user.phone_profile, "role": user.role_id})
+    access_token = auth_utils.create_access_token(data={"sub": user.phone_profile or clean_phone, "role": user.role_id})
     return {"access_token": access_token, "token_type": "bearer"}
 
 # ── 9. GOOGLE OAUTH LOGIN ──────────────────────────────────────────
