@@ -10,15 +10,15 @@ except ImportError:
 class SMSConfig:
     @property
     def ACCOUNT_SID(self):
-        return settings.TWILIO_ACCOUNT_SID or os.getenv("TWILIO_ACCOUNT_SID", "")
+        return os.getenv("TWILIO_ACCOUNT_SID") or settings.TWILIO_ACCOUNT_SID or ""
     
     @property
     def AUTH_TOKEN(self):
-        return settings.TWILIO_AUTH_TOKEN or os.getenv("TWILIO_AUTH_TOKEN", "")
+        return os.getenv("TWILIO_AUTH_TOKEN") or settings.TWILIO_AUTH_TOKEN or ""
     
     @property
     def PHONE_NUMBER(self):
-        return settings.TWILIO_FROM_NUMBER or os.getenv("TWILIO_FROM_NUMBER", "+12193552493")
+        return os.getenv("TWILIO_FROM_NUMBER") or settings.TWILIO_FROM_NUMBER or "+12193552493"
 
 sms_settings = SMSConfig()
 

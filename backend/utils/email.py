@@ -7,19 +7,19 @@ from backend.config import settings
 class EmailConfig:
     @property
     def SMTP_SERVER(self):
-        return settings.SMTP_HOST or os.getenv("SMTP_HOST", "smtp.gmail.com")
+        return os.getenv("SMTP_HOST") or settings.SMTP_HOST or "smtp.gmail.com"
 
     @property
     def SMTP_PORT(self):
-        return settings.SMTP_PORT or int(os.getenv("SMTP_PORT", 587))
+        return int(os.getenv("SMTP_PORT") or settings.SMTP_PORT or 587)
 
     @property
     def SMTP_USERNAME(self):
-        return settings.SMTP_USERNAME or os.getenv("SMTP_USERNAME", "")
+        return os.getenv("SMTP_USERNAME") or settings.SMTP_USERNAME or ""
 
     @property
     def SMTP_PASSWORD(self):
-        return settings.SMTP_PASSWORD or os.getenv("SMTP_PASSWORD", "")
+        return os.getenv("SMTP_PASSWORD") or settings.SMTP_PASSWORD or ""
 
 email_settings = EmailConfig()
 
@@ -34,7 +34,7 @@ def send_email(to_email: str, subject: str, html_content: str):
     smtp_port = email_settings.SMTP_PORT
 
     if not smtp_user or not smtp_pass:
-        print("[Warning] Email credentials missing in settings/env. Skipping direct SMTP email dispatch.")
+        print(f"[Warning] Email credentials missing (user='{smtp_user}'). Skipping direct SMTP email dispatch.")
         return False
 
     msg = MIMEMultipart("alternative")

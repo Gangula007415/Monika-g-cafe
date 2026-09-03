@@ -1,10 +1,10 @@
-# import os - used to construct the path to the .env file
-# base settings - used to define the Settings class that will read environment variables from the .env file
 import os
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 
 # construct the path to the .env file, which is located in the same directory as this config.py file 
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+load_dotenv(env_path, override=True)
 
 # define the Settings class that will read environment variables from the .env file
 class Settings(BaseSettings):
@@ -27,11 +27,11 @@ class Settings(BaseSettings):
     MICROSOFT_CLIENT_ID: str = ""
     MICROSOFT_CLIENT_SECRET: str = ""
 
-# define the Config class that will specify the path to the .env file and ignore any extra environment variables
     class Config:
         env_file = env_path
+        env_file_encoding = "utf-8"
         extra = "ignore"
-        
-# create an instance of the Settings class, which will read the environment variables from the .env file
+
+# create an instance of the Settings class
 settings = Settings()
 
