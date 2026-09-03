@@ -556,20 +556,21 @@
                     <div class="identifier-toggle">
                         <label><input type="radio" name="pwdLoginType" value="email" checked
                                 onclick="togglePasswordInputFields('email')"> Email</label>
-                        <!-- <label><input type="radio" name="pwdLoginType" value="phone"
-                                onclick="togglePasswordInputFields('phone')"> Phone Number</label> -->
+                        <label><input type="radio" name="pwdLoginType" value="phone"
+                                onclick="togglePasswordInputFields('phone')"> Phone Number</label>
                     </div>
                     <div class="form-group" id="pwdEmailGroup">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" placeholder="">
+                        <input type="email" id="email" placeholder="e.g. user@example.com">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Enter password" required>
+                        </div>
                     </div>
                     <div class="form-group" id="pwdPhoneGroup" style="display: none;">
                         <label for="phone">Phone Number</label>
                         <input type="tel" id="phone" placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" placeholder="" required>
+                        <button>Send OTP</button>
                     </div>
                     <button type="submit" class="btn" style="width: 100%; margin-top: 0.5rem;">Login</button>
                 </form>
@@ -642,7 +643,8 @@
                 </div>
                 <p class="mock-link">
                     <a href="#" onclick="triggerMockGoogleLogin()">Test with Mock Google Login</a> &bull;
-                    <a href="#" onclick="triggerMockMicrosoftLogin()">Test with Mock Microsoft Login</a>
+                    <a href="#" onclick="triggerMockMicrosoftLogin()">Test with Mock Microsoft Login</a> &bull;
+                    <a href="#" onclick="triggerMockGithubLogin()">Test with Mock GitHub Login</a>
                 </p>
                 <p class="footer-link"><span>New to the system?</span><a href="register.html">Create Account</a></p>
             </div>
@@ -725,34 +727,6 @@
             }
         });
 
-        function showOtpModal(title, code, isDelivered) {
-            const existing = document.getElementById("otpNoticeModal");
-            if (existing) existing.remove();
-            
-            const modalHtml = `
-                <div id="otpNoticeModal" class="otp-modal-overlay">
-                    <div class="otp-modal">
-                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔑</div>
-                        <h2 style="color: #ffffff; font-size: 1.4rem; margin-bottom: 0.5rem;">${title}</h2>
-                        <p style="color: #a7f3d0; font-size: 0.85rem;">
-                            ${isDelivered ? '✅ Delivered via Gateway Provider' : '⚡ Cloud/Render Fallback Mode Active'}
-                        </p>
-                        <div class="otp-display-box">
-                            <div style="font-size: 0.75rem; color: #f59e0b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Your One-Time Code</div>
-                            <div class="otp-code-text">${code}</div>
-                        </div>
-                        <p style="color: #6ee7b7; font-size: 0.8rem; margin-bottom: 1.25rem;">
-                            Code has been automatically inserted into the input box below.
-                        </p>
-                        <button class="btn btn-primary" style="width: 100%; padding: 0.75rem;" onclick="document.getElementById('otpNoticeModal').remove();">
-                            Verify & Log In 🚀
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML("beforeend", modalHtml);
-        }
-
         document.getElementById("sendEmailOtpBtn").addEventListener("click", async () => {
             const email = document.getElementById("otpEmail").value.trim();
             if (!email) { alert("Please input your email field first."); return; }
@@ -764,16 +738,10 @@
                 document.getElementById("otpCodeLabel").innerText = "Email Verification Code";
                 document.getElementById("otpCodeGroup").style.display = "block";
                 document.getElementById("otpSubmitBtn").style.display = "block";
-                if (res.email_delivered) {
-                    alert(`📩 Real OTP Code sent to ${email}! Please check your email inbox (and Spam folder).`);
-                } else if (res.fallback_otp) {
-                    document.getElementById("otpCode").value = res.fallback_otp;
-                    showOtpModal("Email Verification OTP", res.fallback_otp, false);
-                } else {
-                    alert("✨ OTP code generated!");
-                }
+                document.getElementById("otpCode").value = "";
+                alert(`📩 OTP code sent directly to ${email}! Please check your email inbox (and Spam folder).`);
             } else {
-                alert(res?.detail || "Failed to deliver email code.");
+                alert(res?.detail || "Failed to deliver email code. Please check your email address.");
             }
         });
 
@@ -788,14 +756,8 @@
                 document.getElementById("otpCodeLabel").innerText = "Phone Verification Code";
                 document.getElementById("otpCodeGroup").style.display = "block";
                 document.getElementById("otpSubmitBtn").style.display = "block";
-                if (res.sms_delivered) {
-                    alert(`📱 Real OTP Code sent to ${phone} via SMS! Please check your mobile text messages.`);
-                } else if (res.fallback_otp) {
-                    document.getElementById("otpCode").value = res.fallback_otp;
-                    showOtpModal("Mobile Verification OTP", res.fallback_otp, false);
-                } else {
-                    alert("✨ OTP code generated!");
-                }
+                document.getElementById("otpCode").value = "";
+                alert(`📱 OTP Code sent to ${phone}! Please check your mobile text messages.`);
             } else {
                 alert(res?.detail || "Failed to send mobile OTP.");
             }
@@ -860,10 +822,24 @@
             }
         }
 
-        function loginWithGithub() {
+        async function loginWithGithub() {
             const githubClientId = "Ov23liaKrHzoTaondlfJ";
-            const redirectUri = encodeURIComponent(`${API_URL}/login.html`);
-            window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=user:email`;
+            window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&scope=user:email`;
+        }
+
+        async function triggerMockGithubLogin() {
+            let prefix = prompt("Enter your GitHub username prefix (or press OK for default):", "github_user");
+            if (prefix === null) return;
+            if (!prefix.trim()) prefix = "github_user";
+            prefix = prefix.trim();
+
+            const res = await apiRequest("/auth/github-login", "POST", { code: "mock_github_code_" + prefix });
+            if (res && res.access_token) {
+                localStorage.setItem("access_token", res.access_token);
+                window.location.href = "dashboard.html";
+            } else {
+                alert(res?.detail || "Mock GitHub login failed.");
+            }
         }
 
         async function handleGithubCallback(code) {
