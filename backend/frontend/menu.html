@@ -3,86 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Menu Management</title>
+<title>Monika G Cafe v1.1.0 - Menu Catalog</title>
 
 <link rel="stylesheet" href="css/main.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
 
-<style>
-:root {
-    --bg: #0a0c0f;
-    --panel: #10141a;
-    --field: #171c24;
-    --ink: #e7eaef;
-    --ink-soft: #7c8797;
-    --accent: #6c8cff;
-    --accent-soft: rgba(108,140,255,0.12);
-    --ok: #4ee6a8;
-    --danger: #ff6b6b;
-    --line: #212832;
-}
+<div class="sidebar" id="sidebar-container"></div>
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'IBM Plex Sans', sans-serif;
-}
+<main class="main-content">
 
-body {
-    background:
-        radial-gradient(circle at 85% 0%, rgba(108,140,255,0.08), transparent 45%),
-        var(--bg);
-    display: flex;
-    min-height: 100vh;
-    color: var(--ink);
-}
-
-.sidebar {
-    width: 240px;
-    background: #0d1117;
-    border-right: 1px solid var(--line);
-}
-
-.main-content {
-    flex: 1;
-    padding: 40px 44px;
-}
-
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.page-header h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 1.6rem;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.page-header .status-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--ok);
-    letter-spacing: 0.5px;
-}
-.status-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--ok);
-    box-shadow: 0 0 8px var(--ok);
-    animation: pulse 1.8s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+<div class="top-bar">
+    <div class="page-header" style="margin-bottom: 0;">
+        <h1>🍟 Menu Catalog & Catalog Manager</h1>
+        <p>Explore, Manage, and Price Cafe Items</p>
+    </div>
+    <div class="version-badge">v1.1.0</div>
+</div>
 
 .container {
     display: grid;

@@ -3,240 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order Processing</title>
-
+<title>Monika G Cafe v1.1.0 - Order Desk</title>
 <link rel="stylesheet" href="css/main.css">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
-
-body{
-background:linear-gradient(135deg,#edf4ff,#f8fbff);
-display:flex;
-}
-
-.main-content{
-flex:1;
-padding:35px;
-}
-
-.page-title{
-font-size:32px;
-font-weight:700;
-color:#0f172a;
-margin-bottom:25px;
-}
-
-.card{
-background:#ffffff;
-border-radius:18px;
-padding:25px;
-margin-bottom:30px;
-box-shadow:0 15px 35px rgba(0,0,0,.08);
-border-left:6px solid #4f46e5;
-}
-
-.card h3{
-margin-bottom:20px;
-color:#374151;
-}
-
-#orderForm{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-align-items:end;
-}
-
-.form-group{
-display:flex;
-flex-direction:column;
-}
-
-label{
-font-size:14px;
-font-weight:600;
-margin-bottom:8px;
-color:#475569;
-}
-
-input,select{
-padding:12px;
-border:2px solid #dbeafe;
-border-radius:12px;
-font-size:15px;
-transition:.3s;
-}
-
-input:focus,
-select:focus{
-outline:none;
-border-color:#4f46e5;
-box-shadow:0 0 12px rgba(79,70,229,.25);
-}
-
-.btn{
-background:#4f46e5;
-color:#fff;
-border:none;
-padding:12px 18px;
-border-radius:10px;
-cursor:pointer;
-font-weight:600;
-transition:.3s;
-}
-
-.btn:hover{
-background:#3730a3;
-transform:translateY(-2px);
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-overflow:hidden;
-border-radius:15px;
-}
-
-thead{
-background:#4f46e5;
-color:#fff;
-}
-
-th{
-padding:16px;
-}
-
-td{
-padding:15px;
-text-align:center;
-border-bottom:1px solid #e5e7eb;
-}
-
-tbody tr:hover{
-background:#eef2ff;
-}
-
-.badge{
-padding:6px 14px;
-border-radius:20px;
-font-size:13px;
-font-weight:600;
-color:white;
-display:inline-block;
-}
-
-.pending{
-background:#f59e0b;
-}
-
-.preparing{
-background:#2563eb;
-}
-
-.completed{
-background:#16a34a;
-}
-
-.cancelled{
-background:#dc2626;
-}
-
-.action-btn{
-padding:7px 12px;
-border:none;
-border-radius:8px;
-color:white;
-cursor:pointer;
-margin:2px;
-font-size:13px;
-font-weight:600;
-}
-
-.cook{
-background:#2563eb;
-}
-
-.complete{
-background:#16a34a;
-}
-
-.cancel{
-background:#dc2626;
-}
-
-.closed{
-color:#64748b;
-font-weight:600;
-}
-
-</style>
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
 <div class="sidebar" id="sidebar-container"></div>
 
 <main class="main-content">
 
-<h1 class="page-title">🍽 Order Desk</h1>
-
-<div class="card">
-
-<h3>New Order</h3>
-
-<form id="orderForm">
-
-<div class="form-group">
-<label>Item ID</label>
-<input type="number" id="itemId" required>
-</div>
-
-<div class="form-group">
-<label>Quantity</label>
-<input type="number" id="qty" value="1" required>
-</div>
-
-<div class="form-group">
-<label>Order Type</label>
-<select id="type">
-<option>Dine-in</option>
-<option>Takeaway</option>
-</select>
-</div>
-
-<button class="btn" type="submit">Place Order</button>
-
-</form>
-
+<div class="top-bar">
+    <div class="page-header">
+        <h1>🛒 Order Processing Desk</h1>
+        <p>Live Kitchen Ticket Stream & Order Status Tracker</p>
+    </div>
+    <div class="version-badge">v1.1.0</div>
 </div>
 
 <div class="card">
+    <h3>Create New Order</h3>
+    <form id="orderForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; align-items: end;">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label for="itemId">Item ID</label>
+            <input type="number" id="itemId" placeholder="e.g. 1" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label for="qty">Quantity</label>
+            <input type="number" id="qty" value="1" min="1" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label for="type">Order Type</label>
+            <select id="type">
+                <option value="Dine-in">Dine-in</option>
+                <option value="Takeaway">Takeaway</option>
+            </select>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit" style="width: 100%;">Place Order 🚀</button>
+        </div>
+    </form>
+</div>
 
-<h3>Current Orders</h3>
-
-<table>
-
-<thead>
-<tr>
-<th>Order ID</th>
-<th>Type</th>
-<th>Status</th>
-<th>Actions</th>
-</tr>
-</thead>
-
-<tbody id="queue"></tbody>
-
-</table>
-
+<div class="card">
+    <h3>Current Orders Queue</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="queue"></tbody>
+    </table>
 </div>
 
 </main>

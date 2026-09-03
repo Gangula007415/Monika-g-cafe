@@ -3,206 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Billing & Invoice</title>
-
+<title>Monika G Cafe v1.1.0 - Billing & Invoice</title>
 <link rel="stylesheet" href="css/main.css">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
-
-body{
-background:#eef4ff;
-display:flex;
-}
-
-.main-content{
-flex:1;
-padding:35px;
-}
-
-.page-title{
-font-size:32px;
-font-weight:700;
-color:#1e3a8a;
-margin-bottom:25px;
-}
-
-.card{
-background:#fff;
-padding:30px;
-border-radius:20px;
-box-shadow:0 12px 25px rgba(0,0,0,.08);
-margin-bottom:30px;
-}
-
-.card h2{
-margin-bottom:20px;
-color:#1e293b;
-}
-
-#billForm{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-align-items:end;
-}
-
-.form-group{
-display:flex;
-flex-direction:column;
-}
-
-label{
-font-size:14px;
-font-weight:600;
-margin-bottom:8px;
-color:#475569;
-}
-
-input,
-select{
-padding:12px;
-border:2px solid #dbeafe;
-border-radius:10px;
-font-size:15px;
-}
-
-input:focus,
-select:focus{
-outline:none;
-border-color:#2563eb;
-}
-
-.btn{
-padding:12px;
-border:none;
-border-radius:10px;
-background:#2563eb;
-color:#fff;
-font-size:15px;
-cursor:pointer;
-transition:.3s;
-font-weight:600;
-}
-
-.btn:hover{
-background:#1d4ed8;
-}
-
-.invoice{
-display:none;
-background:white;
-border-radius:20px;
-padding:30px;
-box-shadow:0 10px 25px rgba(0,0,0,.08);
-border-top:8px solid #2563eb;
-}
-
-.invoice-header{
-display:flex;
-justify-content:space-between;
-margin-bottom:25px;
-padding-bottom:15px;
-border-bottom:2px dashed #cbd5e1;
-}
-
-.invoice-header h2{
-color:#2563eb;
-}
-
-.invoice-info{
-line-height:2;
-margin-bottom:20px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-}
-
-thead{
-background:#2563eb;
-color:white;
-}
-
-th,td{
-padding:15px;
-text-align:left;
-}
-
-tbody tr:nth-child(even){
-background:#f8fafc;
-}
-
-.total{
-margin-top:20px;
-padding-top:15px;
-border-top:2px solid #2563eb;
-text-align:right;
-font-size:22px;
-font-weight:bold;
-color:#16a34a;
-}
-
-.print-btn{
-margin-top:20px;
-width:100%;
-background:#16a34a;
-}
-
-.print-btn:hover{
-background:#15803d;
-}
-
-@media print{
-
-body *{
-visibility:hidden;
-}
-
-.invoice,
-.invoice *{
-visibility:visible;
-}
-
-.invoice{
-position:absolute;
-left:0;
-top:0;
-width:100%;
-box-shadow:none;
-}
-
-.print-btn{
-display:none;
-}
-
-}
-
-</style>
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
 <div class="sidebar" id="sidebar-container"></div>
 
-<div class="main-content">
+<main class="main-content">
 
-<h1 class="page-title">💳 Billing Counter</h1>
+<div class="top-bar">
+    <div class="page-header">
+        <h1>🧾 Billing & Invoice Desk</h1>
+        <p>Customer Payment Processing & Printable Cafe Bills</p>
+    </div>
+    <div class="version-badge">v1.1.0</div>
+</div>
 
 <div class="card">
-
-<h2>Create Invoice</h2>
-
-<form id="billForm">
+    <h3>Generate Invoice</h3>
+    <form id="billForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; align-items: end;">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label for="oid">Order ID</label>
+            <input type="number" id="oid" placeholder="e.g. 1" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label for="tot">Subtotal (₹)</label>
+            <input type="number" id="tot" step="0.01" placeholder="e.g. 250.00" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label for="method">Payment Method</label>
+            <select id="method">
+                <option value="Cash">Cash</option>
+                <option value="UPI">UPI</option>
+                <option value="Card">Card</option>
+            </select>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit" style="width: 100%;">Generate Bill 🧾</button>
+        </div>
+    </form>
+</div>
 
 <div class="form-group">
 <label>Order ID</label>

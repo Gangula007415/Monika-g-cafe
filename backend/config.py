@@ -8,7 +8,7 @@ env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
 
 # define the Settings class that will read environment variables from the .env file
 class Settings(BaseSettings):
-    DATABASE_URL: str = "mysql+pymysql://root:password@localhost:3306/monika_cafe_db"
+    DATABASE_URL: str = "mysql+pymysql://root:password@localhost:3307/monika_cafe_db"
     JWT_SECRET: str = "super_secret_jwt_key_monika_cafe"
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60

@@ -5,259 +5,26 @@
 
 <meta charset="UTF-8">
 
-<title>Monika G Cafe Dashboard</title>
+<title>Monika G Cafe v1.1.0 - Operations Hub</title>
 
 <link rel="stylesheet" href="css/main.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-<style>
-
-:root {
-    --bg: #faf9f6;
-    --panel: #ffffff;
-    --field: #f4f2ee;
-    --ink: #17181a;
-    --ink-soft: #7c7972;
-    --line: #e7e4dd;
-}
-
-*{
-    box-sizing:border-box;
-    font-family:'Inter', Arial, sans-serif;
-}
-
-
-body{
-
-    margin:0;
-
-    min-height:100vh;
-
-    background: var(--bg);
-
-    color: var(--ink);
-
-}
-
-
-
-/* SIDEBAR */
-
-.sidebar{
-
-    background: var(--panel);
-    border-right: 1px solid var(--line);
-
-}
-
-
-
-
-
-/* MAIN AREA */
-
-
-.main-content{
-
-    margin-left:260px;
-
-    padding:44px;
-
-}
-
-
-
-.main-content h1{
-
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size:28px;
-
-    margin-bottom:6px;
-
-    color: var(--ink);
-    letter-spacing: -0.5px;
-
-}
-
-.eyebrow-row {
-    font-size: 0.76rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #2f5d52;
-    margin-bottom: 34px;
-}
-
-
-
-
-/* DASHBOARD GRID */
-
-
-.dashboard-grid{
-
-
-    display:grid;
-
-
-    grid-template-columns:
-    repeat(
-    auto-fit,
-    minmax(240px,1fr)
-    );
-
-
-    gap:18px;
-
-
-}
-
-
-
-
-
-
-/* CARDS — plain bordered ticket-style boxes, no gradients or glass */
-
-
-.card{
-
-
-    padding:26px;
-
-
-    border-radius:4px;
-
-
-    background: var(--panel);
-
-
-    border: 1px solid var(--line);
-    border-top: 3px solid var(--accent-color, #2f5d52);
-
-
-    transition:.2s ease;
-
-
-}
-
-
-
-
-.card:hover{
-
-
-    box-shadow: 0 8px 20px rgba(23,24,26,0.06);
-
-
-}
-
-
-
-
-.card h3{
-
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    font-size:0.76rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-
-
-    color: var(--ink-soft);
-
-
-    margin-bottom:16px;
-
-
-}
-
-
-
-.card p{
-
-
-    font-family: 'Space Grotesk', sans-serif;
-    font-size:2.1rem;
-
-
-    font-weight:700;
-
-
-    margin:0;
-
-
-    color: var(--ink);
-
-
-}
-
-
-
-
-
-/* COLORS — one accent per stat, used only on the top border */
-
-
-.revenue{ --accent-color: #2f5d52; }
-.orders{ --accent-color: #2f5580; }
-.customers{ --accent-color: #a3641f; }
-.inventory{ --accent-color: #6c3d94; }
-
-
-
-
-
-
-
-@media(max-width:900px){
-
-
-.main-content{
-
-margin-left:0;
-
-padding:20px;
-
-}
-
-
-}
-
-
-
-
-</style>
-
-
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
-
 
 <body>
 
-
-
 <div class="sidebar" id="sidebar-container"></div>
-
-
-
-
 
 <main class="main-content">
 
-
-
-<h1>
-☕ Monika G Cafe Operations Hub
-</h1>
-
-<div class="eyebrow-row">Order No. 001 — Live Dashboard</div>
+<div class="top-bar">
+    <div class="page-header">
+        <h1>☕ Monika G Cafe Operations Hub</h1>
+        <p>Live Real-Time Management & Performance Overview</p>
+    </div>
+    <div class="version-badge">v1.1.0</div>
+</div>
 
 
 

@@ -3,159 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monika G Cafe - Customers</title>
+<title>Monika G Cafe v1.1.0 - Customer Directory</title>
 <link rel="stylesheet" href="css/main.css">
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
-}
-body{
-    display:flex;
-    background:#f8fafc;
-}
-.main-content{
-    flex:1;
-    padding:35px;
-}
-.header{
-    margin-bottom:30px;
-}
-.header h1{
-    font-size:32px;
-    color:#0f172a;
-}
-.header p{
-    color:#64748b;
-    margin-top:8px;
-}
-.customer-layout{
-    display:grid;
-    grid-template-columns:360px 1fr;
-    gap:30px;
-    align-items:start;
-}
-.card{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
-.card h3{
-    color:#2563eb;
-    margin-bottom:20px;
-}
-.form-group{
-    margin-bottom:18px;
-    display:flex;
-    flex-direction:column;
-}
-label{
-    font-size:14px;
-    font-weight:600;
-    color:#334155;
-    margin-bottom:7px;
-}
-input{
-    padding:12px;
-    border:2px solid #e2e8f0;
-    border-radius:10px;
-    font-size:15px;
-}
-input:focus{
-    outline:none;
-    border-color:#2563eb;
-}
-.btn{
-    padding:12px;
-    width:100%;
-    border:none;
-    border-radius:10px;
-    background:#2563eb;
-    color:white;
-    cursor:pointer;
-    font-weight:600;
-    transition:.3s;
-}
-.btn:hover{
-    background:#1d4ed8;
-}
-.points{
-    margin-top:20px;
-    text-align:center;
-    font-size:35px;
-    font-weight:800;
-    color:#16a34a;
-}
-.badge{
-    padding:5px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:bold;
-}
-.live{
-    background:#dcfce7;
-    color:#15803d;
-}
-.offline{
-    background:#ffedd5;
-    color:#c2410c;
-}
-.table-box{
-    overflow-x:auto;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:650px;
-}
-thead{
-    background:#2563eb;
-    color:white;
-}
-th{
-    padding:15px;
-}
-td{
-    padding:15px;
-    border-bottom:1px solid #e5e7eb;
-    text-align:center;
-}
-tbody tr:hover{
-    background:#eff6ff;
-}
-.view-btn{
-    background:#f59e0b;
-    color:white;
-    border:none;
-    padding:8px 14px;
-    border-radius:8px;
-    cursor:pointer;
-}
-.view-btn:hover{
-    background:#d97706;
-}
-.error{
-    color:#dc2626;
-    font-weight:bold;
-}
-@media(max-width:950px){
-    .customer-layout{
-        grid-template-columns:1fr;
-    }
-}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="sidebar" id="sidebar-container"></div>
 
 <main class="main-content">
-<div class="header">
-<h1>👥 Customer Loyalty Center</h1>
-<p>Manage customer profiles, loyalty points and order history.</p>
+
+<div class="top-bar">
+    <div class="page-header">
+        <h1>👤 Customer Profiles & Loyalty Desk</h1>
+        <p>Registered Patrons & Order Activity Lookup</p>
+    </div>
+    <div class="version-badge">v1.1.0</div>
 </div>
 
 <div class="customer-layout">

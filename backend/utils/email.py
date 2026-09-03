@@ -1,27 +1,45 @@
 import smtplib
+import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from backend.config import settings
 
 class EmailConfig:
-    SMTP_SERVER = settings.SMTP_HOST
-    SMTP_PORT = settings.SMTP_PORT
-    SMTP_USERNAME = settings.SMTP_USERNAME
-    SMTP_PASSWORD = settings.SMTP_PASSWORD
+    @property
+    def SMTP_SERVER(self):
+        return settings.SMTP_HOST or os.getenv("SMTP_HOST", "smtp.gmail.com")
+
+    @property
+    def SMTP_PORT(self):
+        return settings.SMTP_PORT or int(os.getenv("SMTP_PORT", 587))
+
+    @property
+    def SMTP_USERNAME(self):
+        return settings.SMTP_USERNAME or os.getenv("SMTP_USERNAME", "")
+
+    @property
+    def SMTP_PASSWORD(self):
+        return settings.SMTP_PASSWORD or os.getenv("SMTP_PASSWORD", "")
 
 email_settings = EmailConfig()
 
 def send_email(to_email: str, subject: str, html_content: str):
     """
     Sends a structured HTML email from the Cafe Management System.
+    Includes timeout protection for cloud environments like Render where outbound SMTP may be restricted.
     """
-    if not email_settings.SMTP_USERNAME or not email_settings.SMTP_PASSWORD:
-        print("[Warning] Email credentials missing. Skipping email dispatch.")
+    smtp_user = email_settings.SMTP_USERNAME
+    smtp_pass = email_settings.SMTP_PASSWORD
+    smtp_host = email_settings.SMTP_SERVER
+    smtp_port = email_settings.SMTP_PORT
+
+    if not smtp_user or not smtp_pass:
+        print("[Warning] Email credentials missing in settings/env. Skipping direct SMTP email dispatch.")
         return False
 
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
-    msg["From"] = email_settings.SMTP_USERNAME
+    msg["From"] = smtp_user
     msg["To"] = to_email
 
     # Attach HTML Content
@@ -29,11 +47,12 @@ def send_email(to_email: str, subject: str, html_content: str):
     msg.attach(part)
 
     try:
-        with smtplib.SMTP(email_settings.SMTP_SERVER, email_settings.SMTP_PORT) as server:
+        with smtplib.SMTP(smtp_host, smtp_port, timeout=5) as server:
             server.starttls()  # Upgrade connection to secure encrypted SSL/TLS
-            server.login(email_settings.SMTP_USERNAME, email_settings.SMTP_PASSWORD)
-            server.sendmail(email_settings.SMTP_USERNAME, to_email, msg.as_string())
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, to_email, msg.as_string())
+        print(f"🚀 Email dispatched successfully to {to_email}")
         return True
     except Exception as e:
-        print(f"[Error] Failed to send email to {to_email}: {str(e)}")
-        return False
+        print(f"[Error] Failed to send email to {to_email} via SMTP ({smtp_host}:{smtp_port}): {str(e)}")
+        return False

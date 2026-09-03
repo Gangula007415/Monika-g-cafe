@@ -725,6 +725,34 @@
             }
         });
 
+        function showOtpModal(title, code, isDelivered) {
+            const existing = document.getElementById("otpNoticeModal");
+            if (existing) existing.remove();
+            
+            const modalHtml = `
+                <div id="otpNoticeModal" class="otp-modal-overlay">
+                    <div class="otp-modal">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔑</div>
+                        <h2 style="color: #ffffff; font-size: 1.4rem; margin-bottom: 0.5rem;">${title}</h2>
+                        <p style="color: #a7f3d0; font-size: 0.85rem;">
+                            ${isDelivered ? '✅ Delivered via Gateway Provider' : '⚡ Cloud/Render Fallback Mode Active'}
+                        </p>
+                        <div class="otp-display-box">
+                            <div style="font-size: 0.75rem; color: #f59e0b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Your One-Time Code</div>
+                            <div class="otp-code-text">${code}</div>
+                        </div>
+                        <p style="color: #6ee7b7; font-size: 0.8rem; margin-bottom: 1.25rem;">
+                            Code has been automatically inserted into the input box below.
+                        </p>
+                        <button class="btn btn-primary" style="width: 100%; padding: 0.75rem;" onclick="document.getElementById('otpNoticeModal').remove();">
+                            Verify & Log In 🚀
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML("beforeend", modalHtml);
+        }
+
         document.getElementById("sendEmailOtpBtn").addEventListener("click", async () => {
             const email = document.getElementById("otpEmail").value.trim();
             if (!email) { alert("Please input your email field first."); return; }
@@ -732,13 +760,18 @@
             btn.disabled = true; btn.innerText = "Sending...";
             const res = await apiRequest("/auth/send-otp", "POST", { email });
             btn.disabled = false; btn.innerText = "Resend OTP";
-            if (res && !res.error) {
-                alert("OTP has been generated! Check your email or check backend logs.");
+            if (res && (res.status === "success" || !res.error)) {
                 document.getElementById("otpCodeLabel").innerText = "Email Verification Code";
                 document.getElementById("otpCodeGroup").style.display = "block";
                 document.getElementById("otpSubmitBtn").style.display = "block";
+                if (res.fallback_otp) {
+                    document.getElementById("otpCode").value = res.fallback_otp;
+                    showOtpModal("Email Verification OTP", res.fallback_otp, res.email_delivered);
+                } else {
+                    alert("✨ OTP code sent to your email!");
+                }
             } else {
-                alert(res?.detail || "Failed to deliver code.");
+                alert(res?.detail || "Failed to deliver email code.");
             }
         });
 
@@ -749,19 +782,18 @@
             btn.disabled = true; btn.innerText = "Sending...";
             const res = await apiRequest("/auth/send-otp-phone", "POST", { phone: phone });
             btn.disabled = false; btn.innerText = "Resend OTP";
-            if (res && !res.error) {
-                if (res.sms_delivered) {
-                    alert(`📲 Live SMS dispatched to ${phone}! Check your mobile inbox.`);
-                } else if (res.fallback_otp) {
-                    alert(`🔑 Your OTP Verification Code is: ${res.fallback_otp}\n\n(Twilio SMS not configured or recipient number unverified in Twilio Trial account)`);
-                } else {
-                    alert("OTP generated! Enter your code to log in.");
-                }
+            if (res && (res.status === "success" || !res.error)) {
                 document.getElementById("otpCodeLabel").innerText = "Phone Verification Code";
                 document.getElementById("otpCodeGroup").style.display = "block";
                 document.getElementById("otpSubmitBtn").style.display = "block";
+                if (res.fallback_otp) {
+                    document.getElementById("otpCode").value = res.fallback_otp;
+                    showOtpModal("Mobile Verification OTP", res.fallback_otp, res.sms_delivered);
+                } else {
+                    alert("✨ OTP code sent to your mobile phone!");
+                }
             } else {
-                alert(res?.detail || "Failed to send phone OTP.");
+                alert(res?.detail || "Failed to send mobile OTP.");
             }
         });
 
@@ -809,12 +841,8 @@
         }
 
         function loginWithFacebook() {
-            const fbAppId = " 1519625289404805"; // ← replace with your real Facebook App ID
-            if (!fbAppId) {
-                alert("Facebook App ID is not set — add it in loginWithFacebook().");
-                return;
-            }
-            const redirectUri = encodeURIComponent("http://localhost:8000/login.html");
+            const fbAppId = "1519625289404805";
+            const redirectUri = encodeURIComponent(`${API_URL}/login.html`);
             window.location.href = `https://www.facebook.com/v12.0/dialog/oauth?client_id=${fbAppId}&redirect_uri=${redirectUri}&response_type=token&scope=email%20public_profile`;
         }
 
@@ -830,7 +858,7 @@
 
         function loginWithGithub() {
             const githubClientId = "Ov23liaKrHzoTaondlfJ";
-            const redirectUri = encodeURIComponent("http://localhost:8000/login.html");
+            const redirectUri = encodeURIComponent(`${API_URL}/login.html`);
             window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=user:email`;
         }
 
@@ -885,7 +913,6 @@
             }
         }
 
-        // If we just got redirected back from OAuth providers with ?code=..., finish the handshake.
         (function handleOAuthRedirects() {
             const params = new URLSearchParams(window.location.search);
             const code = params.get("code");
@@ -902,20 +929,6 @@
             const fbToken = hash.get("access_token");
             if (fbToken) handleFacebookCallback(fbToken);
         })();
-        async function handleCredentialResponse(response) {
-            console.log("Token received from Google:", response.credential); // Debugging line
-
-            const res = await apiRequest("/auth/google-login", "POST", { token: response.credential });
-
-            if (res && res.access_token) {
-                localStorage.setItem("access_token", res.access_token);
-                window.location.href = "dashboard.html";
-            } else {
-                // Log the specific error from the backend for better troubleshooting
-                console.error("Backend Response:", res);
-                alert(res?.detail || "Google authentication handshake failed.");
-            }
-        }
     </script>
 </body>
 

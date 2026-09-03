@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monika G Cafe - Reports</title>
+    <title>Monika G Cafe v1.1.0 - Sales & Performance Analytics</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         .report-grid {
             display: grid;
@@ -19,10 +21,13 @@
     <div class="sidebar" id="sidebar-container"></div>
     
     <main class="main-content">
-        <h1>Cafe Performance Analytical Reports</h1>
-        <p style="color: var(--text-secondary); margin-top: -1.5rem; margin-bottom: 2rem;">
-            Analyze overall system volume metrics, inspect global profit margins, and track item statistics.
-        </p>
+        <div class="top-bar">
+            <div class="page-header">
+                <h1>📈 Cafe Performance Analytical Reports</h1>
+                <p>Analyze overall system volume metrics, inspect global profit margins, and track item statistics.</p>
+            </div>
+            <div class="version-badge">v1.1.0</div>
+        </div>
 
         <div class="card">
             <button class="btn btn-accent" onclick="loadPerformanceReport()">🔄 Generate Sales & Product Metrics</button>

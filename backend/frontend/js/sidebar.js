@@ -248,7 +248,10 @@ document.addEventListener("DOMContentLoaded", () => {
     container.innerHTML = `
         <div class="sidebar-brand">
             <span class="brand-logo">☕</span>
-            <span class="brand-text">Monika G Cafe</span>
+            <div>
+                <div class="brand-text">Monika G Cafe</div>
+                <span class="version-badge" style="margin-top: 2px; font-size: 0.68rem; padding: 2px 8px;">v1.1.0</span>
+            </div>
         </div>
         <ul class="sidebar-menu">
             <div class="sidebar-section-header">MAIN HUB</div>
@@ -270,6 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <li><a href="report.html" id="nav-report">📈 Sales Reports</a></li>
         </ul>
         <div class="sidebar-footer">
+            <div style="font-size: 0.72rem; color: #a7f3d0; text-align: center; margin-bottom: 8px;">Monika G Cafe System v1.1.0</div>
             <button id="logoutBtn" class="btn btn-logout">🚪 Logout</button>
         </div>
     `;

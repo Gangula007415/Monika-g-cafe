@@ -162,7 +162,14 @@ def send_otp(request: schemas.OTPSendRequest, db: Session = Depends(get_db)):
     )
 
     print(f"\n[OTP Dispatch] Generated OTP {otp_code} for {request.email}. Email sent status: {email_sent}\n")
-    return {"message": "OTP has been sent successfully"}
+    
+    res = {
+        "status": "success",
+        "message": "OTP generated successfully",
+        "email_delivered": email_sent,
+        "fallback_otp": otp_code
+    }
+    return res
 
 # ── 6. EMAIL OTP VERIFY ────────────────────────────────────────────
 @router.post("/verify-otp", response_model=schemas.Token)
