@@ -1,5 +1,7 @@
-// Base URL configuration linking frontend assets to the local FastAPI execution context
-const API_URL = "http://127.0.0.1:8000";
+// Dynamic Base URL configuration: uses current domain in production (Render) or localhost port 8000 in dev
+const API_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && window.location.port !== "8000" && window.location.port !== ""
+    ? "http://127.0.0.1:8000"
+    : window.location.origin;
 
 /**
  * Helper function to retrieve standard request headers 

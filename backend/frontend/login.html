@@ -708,7 +708,7 @@
             formPayload.append("password", password);
 
             try {
-                const response = await fetch("http://127.0.0.1:8000/auth/login", {
+                const response = await fetch(`${API_URL}/auth/login`, {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: formPayload
@@ -733,7 +733,7 @@
             const res = await apiRequest("/auth/send-otp", "POST", { email });
             btn.disabled = false; btn.innerText = "Resend OTP";
             if (res && !res.error) {
-                alert("OTP has been sent to your email! (check the backend terminal — no real email provider is wired up yet)");
+                alert("OTP has been generated! Check your email or check backend logs.");
                 document.getElementById("otpCodeLabel").innerText = "Email Verification Code";
                 document.getElementById("otpCodeGroup").style.display = "block";
                 document.getElementById("otpSubmitBtn").style.display = "block";
@@ -750,7 +750,13 @@
             const res = await apiRequest("/auth/send-otp-phone", "POST", { phone: phone });
             btn.disabled = false; btn.innerText = "Resend OTP";
             if (res && !res.error) {
-                alert("OTP has been dispatched! (check the backend terminal — no real SMS provider is wired up yet)");
+                if (res.sms_delivered) {
+                    alert(`📲 Live SMS dispatched to ${phone}! Check your mobile inbox.`);
+                } else if (res.fallback_otp) {
+                    alert(`🔑 Your OTP Verification Code is: ${res.fallback_otp}\n\n(Twilio SMS not configured or recipient number unverified in Twilio Trial account)`);
+                } else {
+                    alert("OTP generated! Enter your code to log in.");
+                }
                 document.getElementById("otpCodeLabel").innerText = "Phone Verification Code";
                 document.getElementById("otpCodeGroup").style.display = "block";
                 document.getElementById("otpSubmitBtn").style.display = "block";
