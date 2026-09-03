@@ -55,4 +55,4 @@ def send_email(to_email: str, subject: str, html_content: str):
         return True
     except Exception as e:
         print(f"[Error] Failed to send email to {to_email} via SMTP ({smtp_host}:{smtp_port}): {str(e)}")
-        return False
+        return False

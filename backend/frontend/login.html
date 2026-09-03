@@ -764,11 +764,13 @@
                 document.getElementById("otpCodeLabel").innerText = "Email Verification Code";
                 document.getElementById("otpCodeGroup").style.display = "block";
                 document.getElementById("otpSubmitBtn").style.display = "block";
-                if (res.fallback_otp) {
+                if (res.email_delivered) {
+                    alert(`📩 Real OTP Code sent to ${email}! Please check your email inbox (and Spam folder).`);
+                } else if (res.fallback_otp) {
                     document.getElementById("otpCode").value = res.fallback_otp;
-                    showOtpModal("Email Verification OTP", res.fallback_otp, res.email_delivered);
+                    showOtpModal("Email Verification OTP", res.fallback_otp, false);
                 } else {
-                    alert("✨ OTP code sent to your email!");
+                    alert("✨ OTP code generated!");
                 }
             } else {
                 alert(res?.detail || "Failed to deliver email code.");
@@ -786,11 +788,13 @@
                 document.getElementById("otpCodeLabel").innerText = "Phone Verification Code";
                 document.getElementById("otpCodeGroup").style.display = "block";
                 document.getElementById("otpSubmitBtn").style.display = "block";
-                if (res.fallback_otp) {
+                if (res.sms_delivered) {
+                    alert(`📱 Real OTP Code sent to ${phone} via SMS! Please check your mobile text messages.`);
+                } else if (res.fallback_otp) {
                     document.getElementById("otpCode").value = res.fallback_otp;
-                    showOtpModal("Mobile Verification OTP", res.fallback_otp, res.sms_delivered);
+                    showOtpModal("Mobile Verification OTP", res.fallback_otp, false);
                 } else {
-                    alert("✨ OTP code sent to your mobile phone!");
+                    alert("✨ OTP code generated!");
                 }
             } else {
                 alert(res?.detail || "Failed to send mobile OTP.");

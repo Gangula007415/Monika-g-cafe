@@ -166,9 +166,10 @@ def send_otp(request: schemas.OTPSendRequest, db: Session = Depends(get_db)):
     res = {
         "status": "success",
         "message": "OTP generated successfully",
-        "email_delivered": email_sent,
-        "fallback_otp": otp_code
+        "email_delivered": email_sent
     }
+    if not email_sent:
+        res["fallback_otp"] = otp_code
     return res
 
 # ── 6. EMAIL OTP VERIFY ────────────────────────────────────────────
